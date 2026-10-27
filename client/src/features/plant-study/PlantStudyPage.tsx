@@ -46,6 +46,24 @@ const DOCX_MEDIA = {
   insectPollination: "/manus-storage/13_726c9876.png",
 } as const;
 
+const PPT_MEDIA = {
+  heroFlower: "/manus-storage/image-1-2_cf03faac.jpg",
+  beeFlower: "/manus-storage/image-3-2_16f69e02.png",
+  budStages: "/manus-storage/image-5-2_72872037.png",
+  purpleDaisy: "/manus-storage/image-5-3_bb49a0bf.jpg",
+  flowerAnatomy: "/manus-storage/image-4-2_4e48e5f1.png",
+  windStructures: "/manus-storage/image-12-2_57dd047a.png",
+  pollenMicrograph: "/manus-storage/image-13-2_05635cea.png",
+  fieldContrast: "/manus-storage/image-14-2_e1af4b5b.png",
+  selfPollination: "/manus-storage/image-19-2_eddc30ea.png",
+  crossPollination: "/manus-storage/image-20-2_fcd1862f.png",
+  alpineFlowers: "/manus-storage/image-24-2_255ef2f3.jpg",
+  pollenTube: "/manus-storage/image-26-2_d131e631.png",
+  fertilisation: "/manus-storage/image-27-2_e1143104.png",
+  seedlings: "/manus-storage/image-33-3_304edd13.jpg",
+  germination: "/manus-storage/image-34-2_6579c5e9.png",
+} as const;
+
 type Answers = Record<string, number>;
 
 function readSavedAnswers(): Answers {
@@ -106,7 +124,7 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
       <header className="site-header">
         <div className="header-inner">
           <a className="wordmark" href="#top" aria-label="Fieldnotes Biology, back to top">
-            <img src="/brand-mark.svg" alt="" />
+            <span className="wordmark-icon" aria-hidden="true"><Flower2 size={21} /></span>
             <span>
               <span className="wordmark-title">Fieldnotes</span>
               <span className="wordmark-sub">Biology · 16.3</span>
@@ -202,12 +220,12 @@ function AnatomyExplorer({ activePart, setActivePart }: { activePart: FlowerPart
   return (
     <div className="section-card-pad anatomy-layout">
       <figure className="anatomy-art">
-        <img src={DOCX_MEDIA.flowerAnatomy} alt="Illustration of a flower with petals, sepals, stamens, anthers, stigma, style and ovary" />
-        <div className="botanical-photo-pair" aria-label="Close-up views of anther and stigma structures from the supplied DOCX">
-          <img src={DOCX_MEDIA.antherCloseup} alt="Close-up of the anthers and central stigma inside a pink flower" />
-          <img src={DOCX_MEDIA.stigmaCloseup} alt="Close-up of a flower stigma and pollen-receiving surface" />
+        <img src={PPT_MEDIA.flowerAnatomy} alt="Flower anatomy diagram from the supplied PowerPoint, labelled with petals, sepals, stamens, anthers, stigma, style, ovary and ovules" />
+        <div className="botanical-photo-pair" aria-label="Flower images from the supplied PowerPoint">
+          <img src={PPT_MEDIA.budStages} alt="Pink flower buds at two stages before opening" />
+          <img src={PPT_MEDIA.purpleDaisy} alt="Purple daisy showing its conspicuous petals" />
         </div>
-        <figcaption className="art-note">Flower overview with close-ups of pollen-producing anthers and the pollen-receiving stigma.</figcaption>
+        <figcaption className="art-note">Use the labelled structure diagram, then look at the buds and open flower.</figcaption>
       </figure>
       <div className="part-explorer">
         <div>
@@ -247,42 +265,6 @@ function StructureFunctionExplorer({ activePart, setActivePart }: { activePart: 
   );
 }
 
-function StructureSketch({ kind }: { kind: "insect" | "wind" }) {
-  if (kind === "insect") {
-    return (
-      <svg viewBox="0 0 270 120" role="img" aria-label="Anthers and stigma held inside an insect-pollinated flower">
-        <path d="M136 107V39" stroke="#6c8b58" strokeWidth="7" strokeLinecap="round" />
-        <path d="M134 68C99 39 79 43 62 52c15 24 37 33 72 28M137 70c32-31 57-33 76-22-12 25-36 36-76 31" fill="#e6efe0" stroke="#9bb293" strokeWidth="2" />
-        <path d="M111 44c-28-33-43-30-53-22 8 22 25 33 52 37M151 44c28-33 43-30 53-22-8 22-25 33-52 37" fill="#f2dcd5" stroke="#d69c89" strokeWidth="2" />
-        <path d="M133 40V15" stroke="#678751" strokeWidth="5" strokeLinecap="round" />
-        <path d="M124 14h18" stroke="#678751" strokeWidth="5" strokeLinecap="round" />
-        <path d="M98 59 86 36M169 59l12-23" stroke="#82965e" strokeWidth="3" strokeLinecap="round" />
-        <ellipse cx="83" cy="33" rx="5" ry="9" fill="#dc9b4f" transform="rotate(-18 83 33)" />
-        <ellipse cx="184" cy="33" rx="5" ry="9" fill="#dc9b4f" transform="rotate(18 184 33)" />
-        <text x="136" y="10" textAnchor="middle" fill="#61735d" fontSize="9">stigma</text>
-        <text x="77" y="20" textAnchor="middle" fill="#61735d" fontSize="9">anther</text>
-        <text x="193" y="20" textAnchor="middle" fill="#61735d" fontSize="9">anther</text>
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 270 120" role="img" aria-label="A loosely hinged versatile anther hangs from a flexible filament while a feathery stigma projects into the wind">
-      <path d="M60 108V18M60 50c-15-13-27-12-39-9M60 69c14-13 29-13 40-8" stroke="#789260" strokeWidth="6" strokeLinecap="round" fill="none" />
-      <path d="M60 20c-11-5-15-1-14 8 4 7 11 9 17 7" fill="#e2b76d" stroke="#b88c4f" strokeWidth="2" />
-      <path d="M206 106V38" stroke="#789260" strokeWidth="5" strokeLinecap="round" />
-      <path d="M206 39V24" stroke="#789260" strokeWidth="3" />
-      <path d="M205 26 186 10M205 26 197 5M205 26 212 5M205 26 225 10M205 28 186 42M205 28 199 48M205 28 212 49M205 28 226 42" stroke="#8eaa78" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M60 44c16 7 24 17 30 28" fill="none" stroke="#af956b" strokeDasharray="3 4" strokeWidth="2" />
-      <path d="M121 58c12-8 21-8 31 0-10 8-19 8-31 0Z" fill="#ecce89" opacity=".75" />
-      <text x="57" y="113" textAnchor="middle" fill="#61735d" fontSize="9">versatile anther</text>
-      <text x="205" y="113" textAnchor="middle" fill="#61735d" fontSize="9">feathery stigma</text>
-      <path d="M122 24h27" stroke="#9da99a" strokeWidth="1.5" strokeDasharray="2 4" />
-      <path d="M141 19l8 5-8 5" fill="none" stroke="#9da99a" strokeWidth="1.5" />
-      <text x="134" y="17" textAnchor="middle" fill="#899486" fontSize="8">air current</text>
-    </svg>
-  );
-}
-
 function WindComparison() {
   return (
     <div className="section-card-pad">
@@ -290,7 +272,12 @@ function WindComparison() {
         <article className="compare-card">
           <div className="compare-card-head"><h3>Insect-pollinated</h3><span>Inside the flower</span></div>
           <div className="compare-card-body">
-            <div className="structure-sketch"><StructureSketch kind="insect" /></div>
+            <div className="structure-sketch">
+              <div className="structure-photo-pair" aria-label="Close-up Word pictures of the anther and stigma">
+                <img src={DOCX_MEDIA.antherCloseup} alt="Close-up of anthers inside an insect-pollinated flower" />
+                <img src={DOCX_MEDIA.stigmaCloseup} alt="Close-up of a flower's stigma and pollen-receiving surface" />
+              </div>
+            </div>
             <div className="compare-fact"><strong>Anthers</strong>Firmly held inside, where a visiting insect brushes against them.</div>
             <div className="compare-fact"><strong>Stigma</strong>Compact and sticky, positioned to receive pollen from an insect.</div>
           </div>
@@ -298,7 +285,7 @@ function WindComparison() {
         <article className="compare-card">
           <div className="compare-card-head"><h3>Wind-pollinated</h3><span>Exposed to air</span></div>
           <div className="compare-card-body">
-            <div className="structure-sketch"><img className="wind-source-image" src={DOCX_MEDIA.windPollination} alt="Illustration of wind carrying pollen from hanging grass anthers toward feathery stigmas" /></div>
+            <div className="structure-sketch"><img className="wind-source-image" src={PPT_MEDIA.windStructures} alt="PowerPoint diagram of long, loosely hinged grass anthers and exposed feathery stigmas" /></div>
             <div className="compare-fact"><strong>Anthers</strong>Loosely hinged (versatile) on long, flexible filaments; they sway and release pollen into the air.</div>
             <div className="compare-fact"><strong>Stigma</strong>Large, feathery and exposed, with a broad surface that can catch airborne pollen.</div>
           </div>
@@ -309,36 +296,13 @@ function WindComparison() {
   );
 }
 
-function PollenGrainIllustration({ kind }: { kind: "insect" | "wind" }) {
-  const isInsect = kind === "insect";
-  const spikes = isInsect ? Array.from({ length: 12 }, (_, index) => index * 30) : [];
-  return (
-    <svg viewBox="0 0 140 112" role="img" aria-label={isInsect ? "Schematic of a larger rough pollen grain with barbs" : "Schematic of a smaller smooth pollen grain with an aerodynamic shape"}>
-      <defs>
-        <radialGradient id={isInsect ? "insect-grain" : "wind-grain"} cx="35%" cy="30%">
-          <stop offset="0" stopColor={isInsect ? "#f6d59a" : "#dcead0"} />
-          <stop offset="1" stopColor={isInsect ? "#cf8b55" : "#78976c"} />
-        </radialGradient>
-      </defs>
-      {spikes.map((angle) => <path key={angle} d="M70 16L65 33L75 33Z" transform={`rotate(${angle} 70 56)`} fill="#b7774b" stroke="#925c39" strokeWidth="1" />)}
-      <ellipse cx="70" cy="56" rx={isInsect ? 31 : 23} ry={isInsect ? 25 : 17} fill={`url(#${isInsect ? "insect-grain" : "wind-grain"})`} stroke={isInsect ? "#9d663f" : "#67845d"} strokeWidth="2" />
-      {isInsect ? <ellipse cx="59" cy="47" rx="6" ry="4" fill="#fff4d6" opacity=".55" /> : <>
-        <path d="M52 51c9-7 22-7 33 0" fill="none" stroke="#f3f7e9" strokeWidth="2" opacity=".7" />
-        <path d="M55 62c8 4 17 4 26 0" fill="none" stroke="#54734d" strokeWidth="1.5" opacity=".35" />
-        <path d="M99 56h22m-7-7 7 7-7 7" fill="none" stroke="#7b9271" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </>}
-    </svg>
-  );
-}
-
 function PollenComparison() {
   return (
     <div className="section-card-pad pollen-grid">
-      <div className="pollen-visual-grid" aria-label="Schematic comparison of pollen grain size and surface">
-        <figure className="pollen-shape-card insect-shape"><PollenGrainIllustration kind="insect" /><figcaption><strong>Cling to a visitor</strong><span>larger · rough / barbed</span></figcaption></figure>
-        <figure className="pollen-shape-card wind-shape"><PollenGrainIllustration kind="wind" /><figcaption><strong>Drift through air</strong><span>smaller · smooth / light</span></figcaption></figure>
-        <p className="pollen-schematic-note">Schematic feature view · not to scale</p>
-      </div>
+      <figure className="pollen-figure">
+        <img src={PPT_MEDIA.pollenMicrograph} alt="PowerPoint scanning electron micrographs comparing larger textured insect-carried pollen with smaller, smoother wind-borne pollen" />
+        <figcaption>Original PowerPoint micrographs show differences in grain size and surface.</figcaption>
+      </figure>
       <div className="pollen-facts">
         <div className="pollen-type insect">
           <h3>Insect-carried pollen</h3>
@@ -364,7 +328,10 @@ function PollinationDefinition() {
           <p className="definition-text"><strong>Pollination</strong> is the transfer of pollen grains from an <strong>anther</strong> to a <strong>stigma.</strong></p>
           <p className="definition-note">It describes pollen transfer. It is a different event from fertilisation, which happens later inside an ovule.</p>
         </div>
-        <img className="definition-photo" src={DOCX_MEDIA.beePair} alt="Bee moving between two purple flowers while pollen is transferred" />
+        <div className="definition-photo-stack" role="group" aria-label="Pollination photographs from the supplied PowerPoint">
+          <img className="definition-photo" src={PPT_MEDIA.heroFlower} alt="Close-up of a pink flower from the PowerPoint" />
+          <img className="definition-photo-inset" src={PPT_MEDIA.beeFlower} alt="Bee visiting a coneflower" />
+        </div>
       </div>
       <div className="distinction-strip"><CircleHelp size={16} /><span><strong>Exam-language check:</strong> pollen moves anther → stigma. Do not define pollination as the fusion of nuclei—that is fertilisation.</span></div>
     </div>
@@ -435,8 +402,8 @@ function FertilisationTimeline() {
         {step < 2 ? <><div className="nucleus pollen">Pollen<br />nucleus</div><span className="fusion-plus">{step === 0 ? "→" : "+"}</span><div className="nucleus egg">Ovule<br />nucleus</div></> : <div className="nucleus fused">Fused<br />nuclei · zygote</div>}
       </div>
       <figure className="fertilisation-reference">
-        <img src={DOCX_MEDIA.fertilisationSequence} alt="Three microscopy-style stages of a pollen tube reaching an ovule and nuclei fusing" />
-        <figcaption>Three stages inside the ovule: the pollen nucleus reaches the female nucleus and they fuse.</figcaption>
+        <img src={PPT_MEDIA.fertilisation} alt="PowerPoint ovule diagram showing the pollen nucleus meeting the female nucleus inside an ovule" />
+        <figcaption>The PowerPoint ovule diagram shows where the nuclei meet and fuse.</figcaption>
       </figure>
       <div className="key-callout" style={{ marginTop: 13 }}><CheckCircle2 size={17} /><span><strong>Fertilisation is the fusion of a pollen nucleus with the nucleus in an ovule.</strong> Pollination is the earlier transfer to the stigma.</span></div>
     </div>
@@ -450,8 +417,8 @@ function AdaptationMatrix() {
   return (
     <div className="section-card-pad adaptation-layout">
       <figure className="adaptation-field-figure">
-        <img src={DOCX_MEDIA.insectPollination} alt="Illustration of an insect visiting flowers and carrying pollen between them" />
-        <figcaption>Conspicuous petals and a pollinator illustrate an insect-pollinated route.</figcaption>
+        <img src={PPT_MEDIA.fieldContrast} alt="Flower-rich meadow plants growing beside a dense crop field, from the supplied PowerPoint" />
+        <figcaption>Field flowers and crops show flowering plants in contrasting environments.</figcaption>
       </figure>
       <div className="adaptation-content">
         <div className="adaptation-toolbar">
@@ -508,25 +475,17 @@ function GerminationExplorer() {
           <p className="exam-note"><strong>Exam note:</strong> light and soil are not required for a seed to begin germinating. Suitable temperature depends on the species.</p>
         </div>
         <figure style={{ margin: 0 }}>
-          <div className="anatomy-art" style={{ padding: 10 }}><img src={DOCX_MEDIA.flowerToSeed} alt="A sequence from an open flower to a swelling ovary and a mature fruit containing seeds" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
-          <figcaption className="art-note">After fertilisation, ovules become seeds. The interactive controls above model the water, oxygen and suitable temperature those seeds need to germinate.</figcaption>
+          <div className="anatomy-art" style={{ padding: 10 }}><img src={PPT_MEDIA.germination} alt="PowerPoint experiment comparing seeds with and without water, oxygen and suitable temperature" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
+          <img className="seedling-photo" src={PPT_MEDIA.seedlings} alt="Young seedlings emerging from seeds" />
+          <figcaption className="art-note">The supplied experiment isolates germination conditions; the seedlings show the result. Try removing one condition above.</figcaption>
         </figure>
       </div>
     </div>
   );
 }
 
-function FlowerMark({ color = "#d88e7b" }: { color?: string }) {
-  return (
-    <svg viewBox="0 0 70 84" aria-hidden="true">
-      <path d="M35 38v38" stroke="#6f8e61" strokeWidth="4" strokeLinecap="round" />
-      <path d="M34 63c-13-11-21-9-27-6 6 11 15 14 28 11M36 57c9-12 19-14 27-12-3 12-12 18-28 18" fill="#a5bb98" />
-      <g transform="translate(35 25)" fill={color}>
-        <ellipse cy="-12" rx="7" ry="13" /><ellipse cy="-12" rx="7" ry="13" transform="rotate(60)" /><ellipse cy="-12" rx="7" ry="13" transform="rotate(120)" /><ellipse cy="-12" rx="7" ry="13" transform="rotate(180)" /><ellipse cy="-12" rx="7" ry="13" transform="rotate(240)" /><ellipse cy="-12" rx="7" ry="13" transform="rotate(300)" />
-        <circle r="5" fill="#edc873" />
-      </g>
-    </svg>
-  );
+function FlowerPhotoMark({ src }: { src: string }) {
+  return <img src={src} alt="" aria-hidden="true" />;
 }
 
 function SelfPollinationFlow() {
@@ -540,11 +499,15 @@ function SelfPollinationFlow() {
       </div>
       <div className="flow-diagram" aria-live="polite">
         <span className="species-label left">Plant A · same plant</span>
-        <div className="flow-node"><span className="flower-mark"><FlowerMark /></span><span>{isSameFlower ? "One flower · anther" : "Flower 1 · anther"}</span></div>
+        <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.antherCloseup} /></span><span>{isSameFlower ? "One flower · anther" : "Flower 1 · anther"}</span></div>
         <div className="flow-arrow" aria-hidden="true"><span className="pollen-dot-trail" /><ArrowRight size={20} /></div>
-        <div className="flow-node"><span className="flower-mark"><FlowerMark color="#e0a174" /></span><span>{isSameFlower ? "Same flower · stigma" : "Flower 2 · stigma"}</span></div>
+        <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.stigmaCloseup} /></span><span>{isSameFlower ? "Same flower · stigma" : "Flower 2 · stigma"}</span></div>
       </div>
       <p className="flow-fact"><strong>Self-pollination:</strong> pollen moves from an anther to the stigma of the same flower, or to a different flower on the same plant. {isSameFlower ? "The pollen returns to the stigma of its own flower." : "Both flowers belong to the same individual plant."}</p>
+      <figure className="source-flow-figure anatomy-art">
+        <img src={PPT_MEDIA.selfPollination} alt="PowerPoint diagram showing self-pollination within one flower and between flowers on the same plant" />
+        <figcaption className="art-note">Both self-pollination routes are shown in the supplied PowerPoint diagram.</figcaption>
+      </figure>
     </div>
   );
 }
@@ -559,13 +522,13 @@ function CrossPollinationFlow() {
       </div>
       <div className="flow-diagram" aria-live="polite">
         <span className="species-label left">Different plant · same species</span><span className="species-label right">Plant B · same species</span>
-        <div className="flow-node"><span className="flower-mark"><FlowerMark /></span><span>Plant A · pollen donor</span></div>
+        <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.headerBee} /></span><span>Plant A · pollen donor</span></div>
         <div className="flow-arrow" aria-hidden="true"><span className="pollen-dot-trail" style={{ animationDuration: vector === "wind" ? "1.65s" : "2.5s" }} />{vector === "wind" ? <Wind size={20} /> : <ArrowRight size={20} />}</div>
-        <div className="flow-node"><span className="flower-mark"><FlowerMark color="#e0a174" /></span><span>Plant B · stigma receives pollen</span></div>
+        <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.crossPollination} /></span><span>Plant B · stigma receives pollen</span></div>
       </div>
       <p className="flow-fact"><strong>Cross-pollination:</strong> pollen moves from an anther to a flower on a <strong>different plant of the same species.</strong> The second plant boundary is the key distinction from self-pollination.</p>
       <figure className="anatomy-art" style={{ margin: "16px 0 0", padding: 10 }}>
-        <img src={DOCX_MEDIA.crossPollination} alt="Illustration of a bee carrying pollen from one flower to another flower on a different plant" style={{ maxHeight: 240 }} />
+        <img src={PPT_MEDIA.crossPollination} alt="PowerPoint diagram showing pollen moving from one plant's anther to a flower's stigma on a different plant" style={{ maxHeight: 240 }} />
         <figcaption className="art-note">Cross-pollination reaches a flower on a different plant of the same species.</figcaption>
       </figure>
     </div>
@@ -592,7 +555,10 @@ function PopulationImpact() {
           <tbody>{impactRows.map((row) => <tr key={row.label}><td>{row.label}</td><td className={focus === "self" ? "focus-column" : ""}>{row.self}</td><td className={focus === "cross" ? "focus-column" : ""}>{row.cross}</td></tr>)}</tbody>
         </table>
       </div>
-      <div className="population-insight"><div className="supplement-note"><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div><p className="part-intro">More variation can increase the chance that some plants suit a changed environment, but it does not guarantee survival.</p></div>
+      <div className="population-field-row">
+        <figure><img src={PPT_MEDIA.alpineFlowers} alt="Wildflowers growing in a rocky alpine environment beneath mountain peaks" /><figcaption>Plants encounter different environments.</figcaption></figure>
+        <div className="population-insight"><div className="supplement-note"><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div><p className="part-intro">More variation can increase the chance that some plants suit a changed environment, but it does not guarantee survival.</p></div>
+      </div>
     </div>
   );
 }
@@ -609,8 +575,8 @@ function PollenTubeSequence() {
   return (
     <div className="section-card-pad tube-layout">
       <figure className="tube-figure" style={{ margin: 0 }}>
-        <img src={DOCX_MEDIA.ovuleCloseup} alt="Close view of a flower's style and ovule, showing the pollen tube route into the ovule" />
-        <figcaption className="art-note">The close-up connects the style to the ovule; the pollen tube enters through the micropyle.</figcaption>
+        <img src={PPT_MEDIA.pollenTube} alt="PowerPoint diagram of a pollen grain germinating on the stigma and a tube growing through the style to the ovule's micropyle" />
+        <figcaption className="art-note">Follow the pollen tube from the stigma down the style and through the micropyle.</figcaption>
       </figure>
       <div>
         <div className="step-list" aria-label="Pollen tube sequence">
@@ -779,7 +745,7 @@ export default function PlantStudyPage() {
         <Plenary />
       </main>
       <footer className="footer">
-        <div className="page-wrap footer-inner"><span className="footer-brand"><img src="/brand-mark.svg" alt="" /> Fieldnotes · IGCSE Biology</span><span>Topic 16.3 · Core 1–8 · Extended / Supplement 9–12</span><span>Built for curious minds and careful answers.</span></div>
+        <div className="page-wrap footer-inner"><span className="footer-brand"><span className="footer-mark" aria-hidden="true"><Flower2 size={17} /></span> Fieldnotes · IGCSE Biology</span><span>Topic 16.3 · Core 1–8 · Extended / Supplement 9–12</span><span>Built for curious minds and careful answers.</span></div>
       </footer>
     </div>
   );

@@ -82,7 +82,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .site-header { position: sticky; top: 0; z-index: 30; background: rgba(247,246,239,.93); border-bottom: 1px solid rgba(35,75,58,.12); backdrop-filter: blur(18px); }
 .header-inner { width: min(1320px, calc(100% - 48px)); min-height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .wordmark { display: flex; align-items: center; gap: 11px; color: var(--leaf); text-decoration: none; }
-.wordmark img { width: 38px; height: 38px; border-radius: 12px; }
+.wordmark-icon { display: grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; border: 1px solid #dfe6dc; border-radius: 12px; color: var(--leaf); background: #e8eee4; }
 .wordmark-title { font-weight: 700; letter-spacing: -.04em; font-size: 1rem; line-height: 1.05; }
 .wordmark-sub { font-size: .61rem; letter-spacing: .12em; text-transform: uppercase; color: #778176; font-weight: 700; margin-top: 4px; }
 .tier-toggle { display: inline-flex; align-items: center; gap: 3px; padding: 4px; border: 1px solid #e0e3d8; border-radius: 999px; background: #fffefb; }
@@ -170,13 +170,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .compare-card-head span { color: #8c9689; font-size: .64rem; font-weight: 750; text-transform: uppercase; letter-spacing: .11em; }
 .compare-card-body { padding: 17px; }
 .structure-sketch { height: 130px; display: flex; align-items: center; justify-content: center; border-radius: 13px; background: #f7f7f1; margin-bottom: 13px; }
-.structure-sketch svg { width: 100%; max-width: 270px; height: 120px; }
+.structure-photo-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; width: 100%; height: 100%; padding: 6px; }
+.structure-photo-pair img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 9px; }
 .structure-sketch .wind-source-image { width: auto; max-width: 100%; height: 122px; object-fit: contain; mix-blend-mode: multiply; }
 .compare-fact { padding: 10px 0; border-top: 1px solid #eff0e8; color: #69766c; font-size: .78rem; line-height: 1.55; }
 .compare-fact strong { display: block; color: #415545; font-size: .75rem; margin-bottom: 2px; }
 .key-callout { display: flex; align-items: flex-start; gap: 12px; border: 1px solid #dfe8dc; border-radius: 15px; padding: 14px 16px; background: #f1f5ed; color: #5f6f61; font-size: .78rem; line-height: 1.55; }
 .key-callout svg { flex: 0 0 auto; margin-top: 1px; color: #638261; }
 .pollen-grid { display: grid; grid-template-columns: minmax(220px,.85fr) minmax(280px,1.15fr); gap: 25px; align-items: center; }
+.pollen-figure { min-width: 0; margin: 0; padding: 12px; border: 1px solid #e7e4d4; border-radius: 16px; background: #f8f7ef; }
+.pollen-figure img { display: block; width: 100%; max-height: 255px; object-fit: contain; border-radius: 11px; mix-blend-mode: multiply; }
+.pollen-figure figcaption { padding: 9px 3px 0; color: #778275; font-size: .78rem; line-height: 1.45; text-align: center; }
 .pollen-facts { display: grid; gap: 10px; }
 .pollen-type { border-radius: 15px; padding: 15px; }
 .pollen-type.insect { background: #f8eee5; border: 1px solid #f0dfd2; }
@@ -190,7 +194,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .definition-text { position: relative; z-index: 1; max-width: 740px; margin: 12px 0; font: 500 clamp(1.7rem,3.4vw,2.85rem)/1.16 "Fraunces", Georgia, serif; letter-spacing: -.035em; }
 .definition-text strong { color: #f1cf7e; font-weight: 600; }
 .definition-note { color: #d4dfd1; margin: 0; font-size: .78rem; line-height: 1.6; }
-.definition-photo { width: 100%; aspect-ratio: 1/1; object-fit: cover; border: 5px solid rgba(244,242,225,.8); border-radius: 50%; position: relative; z-index: 1; }
+.definition-photo-stack { position: relative; z-index: 1; width: 200px; height: 200px; justify-self: center; }
+.definition-photo { position: absolute; z-index: 2; top: 0; right: 0; width: 160px; height: 160px; aspect-ratio: 1/1; object-fit: cover; border: 5px solid rgba(244,242,225,.8); border-radius: 50%; }
+.definition-photo-inset { position: absolute; z-index: 3; left: 0; bottom: 0; width: 92px; height: 92px; object-fit: cover; border: 5px solid rgba(244,242,225,.9); border-radius: 50%; box-shadow: 0 6px 18px rgba(0,0,0,.16); }
 .distinction-strip { margin-top: 13px; display: flex; align-items: center; gap: 12px; border-radius: 14px; padding: 12px 15px; background: #f4eee1; color: #71695b; font-size: .76rem; line-height: 1.55; }
 .distinction-strip strong { color: #664f3f; }
 .timeline-controls { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 19px; }
@@ -256,7 +262,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .flow-diagram { position:relative; min-height:205px; border-radius:17px; background:linear-gradient(130deg,#f5f6ee,#f9eee8); overflow:hidden; padding:20px; display:flex; justify-content:space-around; align-items:center; gap:12px; }
 .flow-node { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; color:#59675b; font-size:.7rem; font-weight:700; min-width:84px; }
 .flower-mark { width:62px; height:78px; position:relative; display:grid; place-items:start center; }
-.flower-mark svg { width:62px; height:78px; }
+.flower-mark img { display:block; width:62px; height:78px; border:2px solid white; border-radius:13px; object-fit:cover; box-shadow:0 3px 10px rgba(51,67,52,.12); }
 .flow-arrow { position:absolute; z-index:1; left:21%; right:21%; top:47%; display:flex; justify-content:center; align-items:center; color:#8d7164; }
 .flow-arrow::before { content:""; border-top:2px dashed #ba9889; width:calc(100% - 44px); }
 .flow-arrow svg { margin-left:-3px; background:#f7f3ec; }
@@ -337,7 +343,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .footer { border-top:1px solid #e1e4db; color:#808a7f; padding:22px 0 30px; font-size:.68rem; }
 .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
 .footer-brand { display:flex; align-items:center; gap:8px; color:#4f6553; font-weight:700; }
-.footer-brand img { width:22px; height:22px; border-radius:7px; }
+.footer-mark { display:grid; place-items:center; width:22px; height:22px; border-radius:7px; color:#587558; background:#e8eee4; }
 .mobile-menu { display:none; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
@@ -356,7 +362,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .page-wrap,.header-inner,.quick-nav-inner { width: min(100% - 30px, 560px); }
   .header-inner { min-height:65px; gap:10px; }
   .wordmark-sub { display:none; }
-  .wordmark img { width:34px;height:34px; }
+  .wordmark-icon { width:34px;height:34px; }
   .wordmark-title { font-size:.9rem; }
   .tier-toggle { gap:1px; padding:3px; }
   .tier-toggle button { padding:7px 9px; font-size:.67rem; }
@@ -396,7 +402,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .population-field-row figure { flex-basis:105px; }
   .population-field-row img { width:105px;height:105px; }
   .pollination-banner { grid-template-columns:1fr; padding:22px; }
-  .definition-photo { width:96px; height:96px; position:absolute; top:18px; right:18px; opacity:.92; }
+  .definition-photo-stack { position:absolute; top:14px; right:12px; width:100px; height:100px; opacity:.94; }
+  .definition-photo { width:82px; height:82px; top:0; right:0; }
+  .definition-photo-inset { width:48px; height:48px; left:0; bottom:0; border-width:3px; }
   .definition-text { max-width:calc(100% - 78px); font-size:1.68rem; }
   .definition-note { max-width:calc(100% - 54px); }
   .timeline-step { padding:0 4px; }
@@ -581,12 +589,3 @@ body { font-size: 1rem; line-height: 1.7; }
 
 .image-caption > span:last-child { display: block; min-width: 0; }
 .caption-title, .caption-sub { display: block; line-height: 1.35; }
-
-.pollen-visual-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; align-self: stretch; }
-.pollen-shape-card { display: flex; min-width: 0; min-height: 158px; flex-direction: column; justify-content: center; align-items: center; margin: 0; padding: 9px; border: 1px solid #e7e4d4; border-radius: 15px; text-align: center; background: #fbf7e9; }
-.pollen-shape-card.insect-shape { background: #fbf1e7; border-color: #f0dfd2; }
-.pollen-shape-card.wind-shape { background: #eef3e9; border-color: #dce8d9; }
-.pollen-shape-card svg { display: block; width: min(100%,142px); height: 104px; overflow: visible; }
-.pollen-shape-card figcaption { display: grid; gap: 3px; margin-top: 5px; color: #607064; font-size: .73rem; line-height: 1.35; }
-.pollen-shape-card figcaption strong { color: #3f5544; font-size: .79rem; }
-.pollen-schematic-note { grid-column: 1 / -1; margin: 0; color: #838576; font-size: .73rem; line-height: 1.4; text-align: center; }
