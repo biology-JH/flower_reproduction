@@ -26,28 +26,27 @@ import {
   type Tier,
   type TierFilter,
 } from "./data";
+import { LearningObjectives, Plenary, Starter } from "./LessonBookends";
 
-const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v1";
+const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v2";
 
-const PPT_MEDIA = {
-  heroFlower: "/manus-storage/image-1-2_cf03faac.jpg",
-  beeFlower: "/manus-storage/image-3-2_16f69e02.png",
-  budStages: "/manus-storage/image-5-2_72872037.png",
-  purpleDaisy: "/manus-storage/image-5-3_bb49a0bf.jpg",
-  flowerAnatomy: "/manus-storage/image-4-2_4e48e5f1.png",
-  windStructures: "/manus-storage/image-12-2_57dd047a.png",
-  pollenMicrograph: "/manus-storage/image-13-2_05635cea.png",
-  fieldContrast: "/manus-storage/image-14-2_e1af4b5b.png",
-  selfPollination: "/manus-storage/image-19-2_eddc30ea.png",
-  crossPollination: "/manus-storage/image-20-2_fcd1862f.png",
-  alpineFlowers: "/manus-storage/image-24-2_255ef2f3.jpg",
-  pollenTube: "/manus-storage/image-26-2_d131e631.png",
-  fertilisation: "/manus-storage/image-27-2_e1143104.png",
-  seedlings: "/manus-storage/image-33-3_304edd13.jpg",
-  germination: "/manus-storage/image-34-2_6579c5e9.png",
+const DOCX_MEDIA = {
+  header: "/manus-storage/01_585ddc74.png",
+  headerWind: "/manus-storage/02_47342a28.png",
+  headerBee: "/manus-storage/03_c3784110.png",
+  antherCloseup: "/manus-storage/04_b2336b89.png",
+  beePair: "/manus-storage/05_2718934f.png",
+  stigmaCloseup: "/manus-storage/06_55da4129.png",
+  ovuleCloseup: "/manus-storage/07_02cba3bf.png",
+  fertilisationSequence: "/manus-storage/08_6253bbf6.png",
+  flowerToSeed: "/manus-storage/09_dac06813.png",
+  flowerAnatomy: "/manus-storage/10_dad8d9f6.png",
+  crossPollination: "/manus-storage/11_0af2a73c.png",
+  windPollination: "/manus-storage/12_4fadfc3b.png",
+  insectPollination: "/manus-storage/13_726c9876.png",
 } as const;
 
-type Answers = Record<number, number>;
+type Answers = Record<string, number>;
 
 function readSavedAnswers(): Answers {
   if (typeof window === "undefined") return {};
@@ -61,7 +60,7 @@ function readSavedAnswers(): Answers {
 }
 
 function Badge({ tier }: { tier: Tier }) {
-  return <span className={`tier-badge ${tier === "CORE" ? "core" : "supplement"}`}>{tier === "CORE" ? "Core" : "Supplement"}</span>;
+  return <span className={`tier-badge ${tier === "CORE" ? "core" : "supplement"}`} aria-label={tier === "CORE" ? "Core tier" : "Extended, Supplement tier"}>{tier === "CORE" ? "Core" : "Extended"}</span>;
 }
 
 function SectionFrame({
@@ -113,10 +112,10 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
               <span className="wordmark-sub">Biology · 16.3</span>
             </span>
           </a>
-          <div className="tier-toggle" role="group" aria-label="Filter syllabus material by exam tier">
+          <div className="tier-toggle" role="group" aria-label="Filter syllabus material by Core or Extended tier">
             <button type="button" aria-pressed={filter === "all"} onClick={() => onFilter("all")}>All</button>
             <button type="button" aria-pressed={filter === "core"} onClick={() => onFilter("core")}>Core</button>
-            <button type="button" aria-pressed={filter === "supplement"} onClick={() => onFilter("supplement")}>Supplement</button>
+            <button type="button" aria-pressed={filter === "supplement"} onClick={() => onFilter("supplement")}>Extended</button>
           </div>
         </div>
       </header>
@@ -129,10 +128,12 @@ function SectionNav({ filter }: { filter: TierFilter }) {
   return (
     <nav className="quick-nav" aria-label="Lesson sections">
       <div className="quick-nav-inner">
+        <a href="#starter">Starter</a>
+        <a href="#learning-objectives">Objectives</a>
         {shown.map((item, index) => (
           <span key={item.id} style={{ display: "contents" }}>
             {(index === 0 || item.tier !== shown[index - 1]?.tier) && (
-              <span className="nav-tier">{item.tier === "CORE" ? "CORE" : "SUPPLEMENT"}</span>
+              <span className="nav-tier">{item.tier === "CORE" ? "CORE" : "EXTENDED"}</span>
             )}
             <a href={`#${item.id}`} title={`Point ${item.point}: ${item.label}`}>
               {String(item.point).padStart(2, "0")} · {item.label}
@@ -140,6 +141,7 @@ function SectionNav({ filter }: { filter: TierFilter }) {
           </span>
         ))}
         <a href="#self-assessment">Quiz ↗</a>
+        <a href="#plenary">Plenary</a>
       </div>
     </nav>
   );
@@ -154,20 +156,24 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
           <h1 className="hero-title">A flower’s<br />next <em>chapter.</em></h1>
           <p className="hero-lede">Follow the journey from flower parts to pollen, fertilisation and a seed ready to grow. A visual, exam-focused field guide—one syllabus point at a time.</p>
           <div className="hero-actions">
-            <a className="button-primary" href="#core-01">Explore the flower <ArrowRight size={16} /></a>
-            <button className="button-secondary" type="button" onClick={() => { onFilter("supplement"); document.getElementById("supplement-09")?.scrollIntoView({ behavior: "smooth" }); }}>Go to Supplement <Sprout size={15} /></button>
+            <a className="button-primary" href="#starter">Start the warm-up <ArrowRight size={16} /></a>
+            <button className="button-secondary" type="button" onClick={() => { onFilter("supplement"); document.getElementById("supplement-09")?.scrollIntoView({ behavior: "smooth" }); }}>Go to Extended <Sprout size={15} /></button>
           </div>
           <div className="hero-stats" aria-label="Lesson overview">
             <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
-            <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Supplement points</span></div>
-            <div className="hero-stat"><BookOpen size={15} /><span><strong>12</strong> quick checks</span></div>
+            <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
+            <div className="hero-stat"><BookOpen size={15} /><span><strong>24</strong> quiz questions</span></div>
           </div>
         </div>
         <div className="hero-image-wrap">
-          <img className="hero-photo" src={PPT_MEDIA.beeFlower} alt="A bee collecting pollen from a vivid purple coneflower, photographed in the supplied PowerPoint" />
+          <img className="hero-photo" src={DOCX_MEDIA.header} alt="Wide pink lilies with a bee carrying pollen between their anthers and stigmas—the first picture in the supplied DOCX" />
           <div className="image-caption">
             <span className="caption-mark"><Flower2 size={18} /></span>
-            <span><span className="caption-title">Field note 01 · Pollinator in action</span><span className="caption-sub">Pollen travels. The story begins.</span></span>
+            <span><span className="caption-title">Opening image · pollen in motion</span><span className="caption-sub">Start with the journey from anther to stigma.</span></span>
+          </div>
+          <div className="hero-photo-strip" aria-label="Two more pictures from the supplied DOCX">
+            <figure><img src={DOCX_MEDIA.headerWind} alt="Close view of wind-pollinated grass with hanging anthers and feathery stigmas" /><figcaption>Wind · exposed structures</figcaption></figure>
+            <figure><img src={DOCX_MEDIA.headerBee} alt="A bee visiting the reproductive parts of a pink flower" /><figcaption>Insect · pollen transfer</figcaption></figure>
           </div>
         </div>
       </div>
@@ -179,8 +185,8 @@ function LessonIntro({ filter }: { filter: TierFilter }) {
   const text = filter === "core"
     ? <>Showing <strong>Core points 1–8.</strong> These form the shared foundation of the topic.</>
     : filter === "supplement"
-      ? <>Showing <strong>Supplement points 9–12.</strong> Start here when you are ready to extend the story.</>
-      : <>Move between <strong>Core (1–8)</strong> and <strong>Supplement (9–12)</strong> using the filter above. Each badge marks the exam tier.</>;
+      ? <>Showing <strong>Extended / Supplement points 9–12.</strong> Start here when you are ready to extend the story.</>
+      : <>Move between <strong>Core (1–8)</strong> and <strong>Extended / Supplement (9–12)</strong> using the filter above. Every point badge marks its exam tier.</>;
   return (
     <div className="intro-band">
       <div className="page-wrap intro-band-inner">
@@ -196,12 +202,12 @@ function AnatomyExplorer({ activePart, setActivePart }: { activePart: FlowerPart
   return (
     <div className="section-card-pad anatomy-layout">
       <figure className="anatomy-art">
-        <img src={PPT_MEDIA.flowerAnatomy} alt="PowerPoint diagram of an insect-pollinated flower labelled with anther, filament, stigma, style, ovary, ovule, petals and sepals" />
-        <div className="botanical-photo-pair" aria-label="PowerPoint flower photographs">
-          <img src={PPT_MEDIA.budStages} alt="Two stages of a pink flower bud opening" />
-          <img src={PPT_MEDIA.purpleDaisy} alt="A purple daisy showing conspicuous petals" />
+        <img src={DOCX_MEDIA.flowerAnatomy} alt="Illustration of a flower with petals, sepals, stamens, anthers, stigma, style and ovary" />
+        <div className="botanical-photo-pair" aria-label="Close-up views of anther and stigma structures from the supplied DOCX">
+          <img src={DOCX_MEDIA.antherCloseup} alt="Close-up of the anthers and central stigma inside a pink flower" />
+          <img src={DOCX_MEDIA.stigmaCloseup} alt="Close-up of a flower stigma and pollen-receiving surface" />
         </div>
-        <figcaption className="art-note">Flower anatomy and close-up bloom photographs from the supplied PowerPoint.</figcaption>
+        <figcaption className="art-note">Flower overview with close-ups of pollen-producing anthers and the pollen-receiving stigma.</figcaption>
       </figure>
       <div className="part-explorer">
         <div>
@@ -292,7 +298,7 @@ function WindComparison() {
         <article className="compare-card">
           <div className="compare-card-head"><h3>Wind-pollinated</h3><span>Exposed to air</span></div>
           <div className="compare-card-body">
-            <div className="structure-sketch"><img className="wind-source-image" src={PPT_MEDIA.windStructures} alt="PowerPoint diagram showing an exposed feathery stigma and loosely hinged, versatile anther" /></div>
+            <div className="structure-sketch"><img className="wind-source-image" src={DOCX_MEDIA.windPollination} alt="Illustration of wind carrying pollen from hanging grass anthers toward feathery stigmas" /></div>
             <div className="compare-fact"><strong>Anthers</strong>Loosely hinged (versatile) on long, flexible filaments; they sway and release pollen into the air.</div>
             <div className="compare-fact"><strong>Stigma</strong>Large, feathery and exposed, with a broad surface that can catch airborne pollen.</div>
           </div>
@@ -303,13 +309,36 @@ function WindComparison() {
   );
 }
 
+function PollenGrainIllustration({ kind }: { kind: "insect" | "wind" }) {
+  const isInsect = kind === "insect";
+  const spikes = isInsect ? Array.from({ length: 12 }, (_, index) => index * 30) : [];
+  return (
+    <svg viewBox="0 0 140 112" role="img" aria-label={isInsect ? "Schematic of a larger rough pollen grain with barbs" : "Schematic of a smaller smooth pollen grain with an aerodynamic shape"}>
+      <defs>
+        <radialGradient id={isInsect ? "insect-grain" : "wind-grain"} cx="35%" cy="30%">
+          <stop offset="0" stopColor={isInsect ? "#f6d59a" : "#dcead0"} />
+          <stop offset="1" stopColor={isInsect ? "#cf8b55" : "#78976c"} />
+        </radialGradient>
+      </defs>
+      {spikes.map((angle) => <path key={angle} d="M70 16L65 33L75 33Z" transform={`rotate(${angle} 70 56)`} fill="#b7774b" stroke="#925c39" strokeWidth="1" />)}
+      <ellipse cx="70" cy="56" rx={isInsect ? 31 : 23} ry={isInsect ? 25 : 17} fill={`url(#${isInsect ? "insect-grain" : "wind-grain"})`} stroke={isInsect ? "#9d663f" : "#67845d"} strokeWidth="2" />
+      {isInsect ? <ellipse cx="59" cy="47" rx="6" ry="4" fill="#fff4d6" opacity=".55" /> : <>
+        <path d="M52 51c9-7 22-7 33 0" fill="none" stroke="#f3f7e9" strokeWidth="2" opacity=".7" />
+        <path d="M55 62c8 4 17 4 26 0" fill="none" stroke="#54734d" strokeWidth="1.5" opacity=".35" />
+        <path d="M99 56h22m-7-7 7 7-7 7" fill="none" stroke="#7b9271" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </>}
+    </svg>
+  );
+}
+
 function PollenComparison() {
   return (
     <div className="section-card-pad pollen-grid">
-      <figure className="pollen-figure">
-        <img src={PPT_MEDIA.pollenMicrograph} alt="Scanning electron micrographs from the PowerPoint comparing pollen grain size and surface texture" />
-        <figcaption>PowerPoint scanning electron micrographs reveal pollen grain surfaces at different scales.</figcaption>
-      </figure>
+      <div className="pollen-visual-grid" aria-label="Schematic comparison of pollen grain size and surface">
+        <figure className="pollen-shape-card insect-shape"><PollenGrainIllustration kind="insect" /><figcaption><strong>Cling to a visitor</strong><span>larger · rough / barbed</span></figcaption></figure>
+        <figure className="pollen-shape-card wind-shape"><PollenGrainIllustration kind="wind" /><figcaption><strong>Drift through air</strong><span>smaller · smooth / light</span></figcaption></figure>
+        <p className="pollen-schematic-note">Schematic feature view · not to scale</p>
+      </div>
       <div className="pollen-facts">
         <div className="pollen-type insect">
           <h3>Insect-carried pollen</h3>
@@ -335,7 +364,7 @@ function PollinationDefinition() {
           <p className="definition-text"><strong>Pollination</strong> is the transfer of pollen grains from an <strong>anther</strong> to a <strong>stigma.</strong></p>
           <p className="definition-note">It describes pollen transfer. It is a different event from fertilisation, which happens later inside an ovule.</p>
         </div>
-        <img className="definition-photo" src={PPT_MEDIA.heroFlower} alt="Close-up of pink flower reproductive parts from the supplied PowerPoint" />
+        <img className="definition-photo" src={DOCX_MEDIA.beePair} alt="Bee moving between two purple flowers while pollen is transferred" />
       </div>
       <div className="distinction-strip"><CircleHelp size={16} /><span><strong>Exam-language check:</strong> pollen moves anther → stigma. Do not define pollination as the fusion of nuclei—that is fertilisation.</span></div>
     </div>
@@ -406,8 +435,8 @@ function FertilisationTimeline() {
         {step < 2 ? <><div className="nucleus pollen">Pollen<br />nucleus</div><span className="fusion-plus">{step === 0 ? "→" : "+"}</span><div className="nucleus egg">Ovule<br />nucleus</div></> : <div className="nucleus fused">Fused<br />nuclei · zygote</div>}
       </div>
       <figure className="fertilisation-reference">
-        <img src={PPT_MEDIA.fertilisation} alt="PowerPoint ovule diagram showing the pollen nucleus and female nucleus meeting inside an ovule" />
-        <figcaption>Inside the ovule: the two nuclei meet and fuse.</figcaption>
+        <img src={DOCX_MEDIA.fertilisationSequence} alt="Three microscopy-style stages of a pollen tube reaching an ovule and nuclei fusing" />
+        <figcaption>Three stages inside the ovule: the pollen nucleus reaches the female nucleus and they fuse.</figcaption>
       </figure>
       <div className="key-callout" style={{ marginTop: 13 }}><CheckCircle2 size={17} /><span><strong>Fertilisation is the fusion of a pollen nucleus with the nucleus in an ovule.</strong> Pollination is the earlier transfer to the stigma.</span></div>
     </div>
@@ -421,8 +450,8 @@ function AdaptationMatrix() {
   return (
     <div className="section-card-pad adaptation-layout">
       <figure className="adaptation-field-figure">
-        <img src={PPT_MEDIA.fieldContrast} alt="Flower-rich meadow plants growing beside a dense cereal crop" />
-        <figcaption>A flower-rich meadow beside a cereal field: two different floral settings.</figcaption>
+        <img src={DOCX_MEDIA.insectPollination} alt="Illustration of an insect visiting flowers and carrying pollen between them" />
+        <figcaption>Conspicuous petals and a pollinator illustrate an insect-pollinated route.</figcaption>
       </figure>
       <div className="adaptation-content">
         <div className="adaptation-toolbar">
@@ -479,9 +508,8 @@ function GerminationExplorer() {
           <p className="exam-note"><strong>Exam note:</strong> light and soil are not required for a seed to begin germinating. Suitable temperature depends on the species.</p>
         </div>
         <figure style={{ margin: 0 }}>
-          <div className="anatomy-art" style={{ padding: 10 }}><img src={PPT_MEDIA.germination} alt="PowerPoint germination experiment with cress seeds, wet and dry wool, boiled water, and a cold 4 degree tube" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
-          <img className="seedling-photo" src={PPT_MEDIA.seedlings} alt="Young seedlings emerging from seeds in the supplied PowerPoint" />
-          <figcaption className="art-note">The PowerPoint experiment isolates germination conditions; the photo shows seedlings beginning to grow.</figcaption>
+          <div className="anatomy-art" style={{ padding: 10 }}><img src={DOCX_MEDIA.flowerToSeed} alt="A sequence from an open flower to a swelling ovary and a mature fruit containing seeds" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
+          <figcaption className="art-note">After fertilisation, ovules become seeds. The interactive controls above model the water, oxygen and suitable temperature those seeds need to germinate.</figcaption>
         </figure>
       </div>
     </div>
@@ -517,10 +545,6 @@ function SelfPollinationFlow() {
         <div className="flow-node"><span className="flower-mark"><FlowerMark color="#e0a174" /></span><span>{isSameFlower ? "Same flower · stigma" : "Flower 2 · stigma"}</span></div>
       </div>
       <p className="flow-fact"><strong>Self-pollination:</strong> pollen moves from an anther to the stigma of the same flower, or to a different flower on the same plant. {isSameFlower ? "The pollen returns to the stigma of its own flower." : "Both flowers belong to the same individual plant."}</p>
-      <figure className="source-flow-figure anatomy-art">
-        <img src={PPT_MEDIA.selfPollination} alt="PowerPoint diagram showing self-pollination within a flower and between flowers on the same plant" />
-        <figcaption className="art-note">Both routes are shown in the supplied PowerPoint diagram.</figcaption>
-      </figure>
     </div>
   );
 }
@@ -541,8 +565,8 @@ function CrossPollinationFlow() {
       </div>
       <p className="flow-fact"><strong>Cross-pollination:</strong> pollen moves from an anther to a flower on a <strong>different plant of the same species.</strong> The second plant boundary is the key distinction from self-pollination.</p>
       <figure className="anatomy-art" style={{ margin: "16px 0 0", padding: 10 }}>
-        <img src={PPT_MEDIA.crossPollination} alt="PowerPoint diagram showing pollen moving from one plant's anther to a flower's stigma on a different plant" style={{ maxHeight: 240 }} />
-        <figcaption className="art-note">A different plant of the same species receives the pollen.</figcaption>
+        <img src={DOCX_MEDIA.crossPollination} alt="Illustration of a bee carrying pollen from one flower to another flower on a different plant" style={{ maxHeight: 240 }} />
+        <figcaption className="art-note">Cross-pollination reaches a flower on a different plant of the same species.</figcaption>
       </figure>
     </div>
   );
@@ -568,10 +592,7 @@ function PopulationImpact() {
           <tbody>{impactRows.map((row) => <tr key={row.label}><td>{row.label}</td><td className={focus === "self" ? "focus-column" : ""}>{row.self}</td><td className={focus === "cross" ? "focus-column" : ""}>{row.cross}</td></tr>)}</tbody>
         </table>
       </div>
-      <div className="population-field-row">
-        <figure><img src={PPT_MEDIA.alpineFlowers} alt="Wildflowers growing in a rocky alpine environment beneath mountain peaks" /><figcaption>Plants encounter different environments.</figcaption></figure>
-        <div><div className="supplement-note"><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div><p className="part-intro">More variation can increase the chance that some plants suit a changed environment, but it does not guarantee survival.</p></div>
-      </div>
+      <div className="population-insight"><div className="supplement-note"><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div><p className="part-intro">More variation can increase the chance that some plants suit a changed environment, but it does not guarantee survival.</p></div>
     </div>
   );
 }
@@ -588,8 +609,8 @@ function PollenTubeSequence() {
   return (
     <div className="section-card-pad tube-layout">
       <figure className="tube-figure" style={{ margin: 0 }}>
-        <img src={PPT_MEDIA.pollenTube} alt="PowerPoint diagram of a pollen grain germinating on the stigma and a tube growing through the style to the ovule's micropyle" />
-        <figcaption className="art-note">The supplied PowerPoint labels the pollen tube route to the micropyle.</figcaption>
+        <img src={DOCX_MEDIA.ovuleCloseup} alt="Close view of a flower's style and ovule, showing the pollen tube route into the ovule" />
+        <figcaption className="art-note">The close-up connects the style to the ovule; the pollen tube enters through the micropyle.</figcaption>
       </figure>
       <div>
         <div className="step-list" aria-label="Pollen tube sequence">
@@ -616,28 +637,33 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
   }, [answers]);
   useEffect(() => setQuestionIndex(0), [filter]);
 
-  const score = quizQuestions.filter((item) => answers[item.point] === item.answer).length;
-  const completed = quizQuestions.filter((item) => answers[item.point] !== undefined).length;
-  const coreScore = quizQuestions.filter((item) => item.tier === "CORE" && answers[item.point] === item.answer).length;
-  const supplementScore = quizQuestions.filter((item) => item.tier === "SUPPLEMENT" && answers[item.point] === item.answer).length;
-  const coreDone = quizQuestions.filter((item) => item.tier === "CORE" && answers[item.point] !== undefined).length;
-  const supplementDone = quizQuestions.filter((item) => item.tier === "SUPPLEMENT" && answers[item.point] !== undefined).length;
-  const selectedAnswer = question ? answers[question.point] : undefined;
+  const totalQuestions = quizQuestions.length;
+  const coreTotal = quizQuestions.filter((item) => item.tier === "CORE").length;
+  const extendedTotal = quizQuestions.filter((item) => item.tier === "SUPPLEMENT").length;
+  const score = quizQuestions.filter((item) => answers[item.id] === item.answer).length;
+  const completed = quizQuestions.filter((item) => answers[item.id] !== undefined).length;
+  const coreScore = quizQuestions.filter((item) => item.tier === "CORE" && answers[item.id] === item.answer).length;
+  const extendedScore = quizQuestions.filter((item) => item.tier === "SUPPLEMENT" && answers[item.id] === item.answer).length;
+  const coreDone = quizQuestions.filter((item) => item.tier === "CORE" && answers[item.id] !== undefined).length;
+  const extendedDone = quizQuestions.filter((item) => item.tier === "SUPPLEMENT" && answers[item.id] !== undefined).length;
+  const selectedAnswer = question ? answers[question.id] : undefined;
   const answerQuestion = (choice: number) => {
-    if (question) setAnswers((current) => ({ ...current, [question.point]: choice }));
+    if (question) setAnswers((current) => ({ ...current, [question.id]: choice }));
   };
   const jumpToPoint = (point: number) => {
-    const index = visibleQuestions.findIndex((item) => item.point === point);
+    const firstUnanswered = visibleQuestions.findIndex((item) => item.point === point && answers[item.id] === undefined);
+    const firstForPoint = visibleQuestions.findIndex((item) => item.point === point);
+    const index = firstUnanswered >= 0 ? firstUnanswered : firstForPoint;
     if (index >= 0) setQuestionIndex(index);
   };
-  const currentTierLabel = filter === "all" ? "All 12 syllabus points" : filter === "core" ? "Core points 1–8" : "Supplement points 9–12";
+  const currentTierLabel = filter === "all" ? "All 12 syllabus points" : filter === "core" ? "Core points 1–8" : "Extended / Supplement points 9–12";
 
   return (
     <section className="quiz-section" id="self-assessment" aria-labelledby="quiz-title">
       <div className="page-wrap">
         <div className="quiz-banner">
-          <div><div className="eyebrow" style={{ color: "#b5c5b1" }}>Your field check · instant feedback</div><h2 id="quiz-title">What’s taking root?</h2><p>One quick question for each syllabus point. Your progress is scored on this device’s current browser session—no account needed.</p></div>
-          <div className="quiz-score-tile" aria-live="polite"><strong>{score}<span style={{ color: "#d0dfd0", fontSize: ".9rem" }}> / 12</span></strong><span>correct so far</span></div>
+          <div><div className="eyebrow" style={{ color: "#b5c5b1" }}>Your field check · instant feedback</div><h2 id="quiz-title">What’s taking root?</h2><p>Two questions for every syllabus point. Your progress is scored on this device’s current browser session—no account needed.</p></div>
+          <div className="quiz-score-tile" aria-live="polite"><strong>{score}<span style={{ color: "#d0dfd0", fontSize: ".9rem" }}> / {totalQuestions}</span></strong><span>correct so far</span></div>
         </div>
         <div className="quiz-body">
           <div className="quiz-question">
@@ -659,25 +685,29 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
               </div>}
               <div className="quiz-controls">
                 <button type="button" className="quiz-control-button" disabled={questionIndex === 0} onClick={() => setQuestionIndex((current) => Math.max(0, current - 1))}><ArrowLeft size={14} /> Previous</button>
-                <button type="button" className="quiz-control-button" disabled={questionIndex >= visibleQuestions.length - 1} onClick={() => setQuestionIndex((current) => Math.min(visibleQuestions.length - 1, current + 1))}>Next point <ArrowRight size={14} /></button>
+                <button type="button" className="quiz-control-button" disabled={questionIndex >= visibleQuestions.length - 1} onClick={() => setQuestionIndex((current) => Math.min(visibleQuestions.length - 1, current + 1))}>Next question <ArrowRight size={14} /></button>
               </div>
             </> : <p>No questions for this filter.</p>}
           </div>
-          <aside className="quiz-aside" aria-label="Assessment progress by syllabus point">
-            <h3>Learning dashboard</h3><p>{currentTierLabel} · {completed} of 12 attempted across both tiers.</p>
-            <div className="score-tier">Core · {coreDone}/8 attempted</div>
-            <div className="score-tier-row"><span>Correct</span><span>{coreScore} / 8</span></div>
-            <div className="progress-track"><span style={{ width: `${(coreScore / 8) * 100}%` }} /></div>
-            <div className="score-tier">Supplement · {supplementDone}/4 attempted</div>
-            <div className="score-tier-row"><span>Correct</span><span>{supplementScore} / 4</span></div>
-            <div className="progress-track supp"><span style={{ width: `${(supplementScore / 4) * 100}%` }} /></div>
-            <div className="score-tier" style={{ marginTop: 16 }}>Jump to a point · {completed} answered</div>
+          <aside className="quiz-aside" aria-label="Assessment progress by Core and Extended syllabus point">
+            <h3>Learning dashboard</h3><p>{currentTierLabel} · {completed} of {totalQuestions} questions attempted.</p>
+            <div className="score-tier">Core · {coreDone}/{coreTotal} questions attempted</div>
+            <div className="score-tier-row"><span>Correct</span><span>{coreScore} / {coreTotal}</span></div>
+            <div className="progress-track"><span style={{ width: `${(coreScore / coreTotal) * 100}%` }} /></div>
+            <div className="score-tier">Extended / Supplement · {extendedDone}/{extendedTotal} questions attempted</div>
+            <div className="score-tier-row"><span>Correct</span><span>{extendedScore} / {extendedTotal}</span></div>
+            <div className="progress-track supp"><span style={{ width: `${(extendedScore / extendedTotal) * 100}%` }} /></div>
+            <div className="score-tier" style={{ marginTop: 16 }}>Jump to a syllabus point</div>
             <div className="point-progress">
-              {quizQuestions.map((item) => {
-                const answered = answers[item.point] !== undefined;
-                const correct = answers[item.point] === item.answer;
-                const visible = filter === "all" || item.tier.toLowerCase() === filter;
-                return <button type="button" key={item.point} className={`point-dot ${answered ? "answered" : ""} ${item.tier === "SUPPLEMENT" ? "supp" : ""} ${answered ? correct ? "correct" : "incorrect" : ""}`} title={`Point ${item.point}: ${item.title}${answered ? correct ? " — correct" : " — review" : " — not answered"}`} aria-label={`Go to point ${item.point}${answered ? correct ? ", correct" : ", review answer" : ""}`} aria-current={question?.point === item.point ? "step" : undefined} disabled={!visible} onClick={() => jumpToPoint(item.point)}>{String(item.point).padStart(2, "0")}</button>;
+              {syllabusSections.map((section) => {
+                const pointQuestions = quizQuestions.filter((item) => item.point === section.point);
+                const attempted = pointQuestions.filter((item) => answers[item.id] !== undefined).length;
+                const correct = pointQuestions.filter((item) => answers[item.id] === item.answer).length;
+                const hasIncorrect = pointQuestions.some((item) => answers[item.id] !== undefined && answers[item.id] !== item.answer);
+                const complete = attempted === pointQuestions.length;
+                const visible = filter === "all" || section.tier.toLowerCase() === filter;
+                const status = attempted === 0 ? "not started" : `${attempted} of ${pointQuestions.length} attempted, ${correct} correct`;
+                return <button type="button" key={section.point} className={`point-dot ${attempted ? "answered" : ""} ${section.tier === "SUPPLEMENT" ? "supp" : ""} ${hasIncorrect ? "incorrect" : ""} ${complete && correct === pointQuestions.length ? "correct" : ""}`} title={`Point ${section.point} · ${section.tier === "CORE" ? "Core" : "Extended"} · ${status}`} aria-label={`Go to point ${section.point}, ${section.tier === "CORE" ? "Core" : "Extended"}, ${status}`} aria-current={question?.point === section.point ? "step" : undefined} disabled={!visible} onClick={() => jumpToPoint(section.point)}>{String(section.point).padStart(2, "0")}</button>;
               })}
             </div>
             <button type="button" className="reset-button" onClick={() => { setAnswers({}); setQuestionIndex(0); }}><RotateCcw size={13} style={{ verticalAlign: "-3px", marginRight: 4 }} /> Reset this session</button>
@@ -699,6 +729,8 @@ export default function PlantStudyPage() {
       <SectionNav filter={filter} />
       <main>
         <Hero onFilter={setFilter} />
+        <Starter />
+        <LearningObjectives />
         <LessonIntro filter={filter} />
         <div className="page-wrap section-stack">
           {showCore && <>
@@ -744,9 +776,10 @@ export default function PlantStudyPage() {
           </>}
         </div>
         <QuizDashboard filter={filter} />
+        <Plenary />
       </main>
       <footer className="footer">
-        <div className="page-wrap footer-inner"><span className="footer-brand"><img src="/brand-mark.svg" alt="" /> Fieldnotes · IGCSE Biology</span><span>Topic 16.3 · Core 1–8 · Supplement 9–12</span><span>Built for curious minds and careful answers.</span></div>
+        <div className="page-wrap footer-inner"><span className="footer-brand"><img src="/brand-mark.svg" alt="" /> Fieldnotes · IGCSE Biology</span><span>Topic 16.3 · Core 1–8 · Extended / Supplement 9–12</span><span>Built for curious minds and careful answers.</span></div>
       </footer>
     </div>
   );

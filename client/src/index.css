@@ -177,9 +177,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .key-callout { display: flex; align-items: flex-start; gap: 12px; border: 1px solid #dfe8dc; border-radius: 15px; padding: 14px 16px; background: #f1f5ed; color: #5f6f61; font-size: .78rem; line-height: 1.55; }
 .key-callout svg { flex: 0 0 auto; margin-top: 1px; color: #638261; }
 .pollen-grid { display: grid; grid-template-columns: minmax(220px,.85fr) minmax(280px,1.15fr); gap: 25px; align-items: center; }
-.pollen-figure { border-radius: 17px; background: #fbf7df; border: 1px solid #eee8cc; padding: 12px; }
-.pollen-figure img { display: block; width: 100%; height: 295px; object-fit: contain; }
-.pollen-figure figcaption { color: #82806d; font-size: .66rem; text-align: center; margin: 7px 0 1px; }
 .pollen-facts { display: grid; gap: 10px; }
 .pollen-type { border-radius: 15px; padding: 15px; }
 .pollen-type.insect { background: #f8eee5; border: 1px solid #f0dfd2; }
@@ -392,8 +389,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .anatomy-art img { max-height:350px; }
   .part-function-grid,.compare-grid { grid-template-columns:1fr; }
   .structure-sketch { height:115px; }
-  .pollen-figure { order:-1; }
-  .pollen-figure img { height:225px; }
   .fertilisation-reference { flex-direction:column; align-items:flex-start; }
   .fertilisation-reference img { width:128px;height:128px; }
   .adaptation-field-figure img { height:175px; }
@@ -426,3 +421,172 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
 }
+
+
+/* Readable lesson typography and the new lesson bookends */
+html { font-size: 18px; }
+body { font-size: 1rem; line-height: 1.7; }
+.eyebrow { font-size: .78rem; }
+.wordmark-sub, .quick-nav .nav-tier, .tier-badge, .mini-label, .compare-card-head span, .definition-word, .quiz-score-tile span, .score-tier { font-size: .72rem; }
+.quick-nav a { font-size: .8rem; }
+.tier-toggle button { font-size: .86rem; padding: 9px 14px; }
+.button-primary, .button-secondary { font-size: .9rem; min-height: 50px; }
+.hero-lede { font-size: 1.12rem; }
+.hero-stat { font-size: .84rem; }
+.hero-stat strong { font-size: 1.02rem; }
+.caption-title { font-size: .84rem; }
+.caption-sub { font-size: .76rem; }
+.intro-band p { font-size: .92rem; }
+.tier-badge { padding: 7px 11px; letter-spacing: .07em; }
+.section-heading p { font-size: 1rem; }
+.part-intro { font-size: .94rem; }
+.part-chip { font-size: .86rem; padding: 9px 12px; }
+.part-detail p { font-size: .93rem; }
+.function-card strong { font-size: .92rem; }
+.function-card small { font-size: .75rem; }
+.function-card p, .compare-fact, .definition-note, .distinction-strip, .flow-fact { font-size: .9rem; }
+.compare-card-head h3, .pollen-type h3 { font-size: 1.2rem; }
+.fact-pill { font-size: .8rem; }
+.pollen-type .part-intro { font-size: .9rem; }
+.timeline-step strong { font-size: .88rem; }
+.timeline-step span { font-size: .78rem; }
+.adaptation-toolbar select, .sort-button { font-size: .86rem; }
+.adaptation-table th { font-size: .78rem; }
+.adaptation-table td, .impact-table td { font-size: .88rem; }
+.condition-row label, .temp-head { font-size: .95rem; }
+.condition-row small, .temp-hint, .exam-note, .range-labels { font-size: .78rem; }
+.temp-value { font-size: 1.2rem; }
+.germination-result { font-size: .92rem; }
+.flow-tab, .impact-tab { font-size: .86rem; padding: 9px 13px; }
+.flow-node { font-size: .82rem; }
+.species-label { font-size: .7rem; }
+.sequence-step strong { font-size: .88rem; }
+.sequence-step small { font-size: .8rem; }
+.quiz-banner p, .quiz-aside > p { font-size: .9rem; }
+.quiz-meta { font-size: .8rem; }
+.answer-option { font-size: .9rem; }
+.quiz-feedback { font-size: .88rem; }
+.quiz-control-button, .reset-button, .score-tier-row { font-size: .82rem; }
+.point-dot { font-size: .78rem; }
+.footer { font-size: .78rem; }
+
+.hero-image-wrap { width: min(100%, 520px); height: auto; min-height: 0; aspect-ratio: auto; margin-left: auto; padding: 12px; border-radius: 25px; overflow: visible; }
+.hero-photo { display: block; width: 100%; height: auto; min-height: 0; aspect-ratio: 1.72 / 1; object-fit: cover; object-position: center 45%; border-radius: 17px; }
+.image-caption { position: relative; left: auto; bottom: auto; z-index: 2; width: fit-content; max-width: calc(100% - 24px); margin: -57px 12px 13px; padding: 11px 14px; }
+.hero-photo-strip { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 3px; }
+.hero-photo-strip figure { min-width: 0; margin: 0; overflow: hidden; border: 1px solid #e2e7dc; border-radius: 14px; background: #f2f4ed; }
+.hero-photo-strip img { display: block; width: 100%; height: 103px; object-fit: cover; }
+.hero-photo-strip figcaption { padding: 8px 10px; color: #5d6e61; font-size: .77rem; font-weight: 700; }
+.botanical-photo-pair img { mix-blend-mode: normal; }
+.population-insight { margin-top: 14px; }
+.population-insight .part-intro { margin-bottom: 0; }
+
+.lesson-start-section { padding: 23px 0 16px; }
+.lesson-block-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 22px; margin: 0 0 17px; }
+.lesson-block-heading .eyebrow { display: flex; align-items: center; gap: 8px; }
+.lesson-block-heading h2, .objectives-heading h2 { margin: 7px 0 4px; color: #2b4334; font: 600 clamp(1.7rem,3vw,2.35rem)/1.12 "Fraunces", Georgia, serif; letter-spacing: -.04em; }
+.lesson-block-heading p, .objectives-heading p { color: #69766d; font-size: .95rem; margin: 0; line-height: 1.55; }
+.starter-score { flex: 0 0 auto; display: flex; align-items: center; gap: 11px; padding: 10px 14px; border: 1px solid #e1e6da; border-radius: 14px; background: #fffefb; color: #67766a; font-size: .82rem; }
+.starter-score strong { color: #35543d; font: 600 1.35rem "Fraunces", Georgia, serif; }
+.starter-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; }
+.starter-card { min-width: 0; border: 1px solid #e3e7dd; border-radius: 17px; padding: 17px; background: #fffefb; box-shadow: 0 9px 24px rgba(51,67,52,.035); }
+.starter-card-top { display: flex; justify-content: space-between; gap: 10px; color: #758274; font-size: .76rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
+.starter-card-top span:last-child { color: #7b9074; }
+.starter-card h3 { margin: 12px 0 13px; color: #344b39; font: 600 1.08rem/1.28 "Fraunces", Georgia, serif; }
+.starter-choices { display: grid; gap: 7px; }
+.starter-choice { display: flex; align-items: flex-start; gap: 9px; width: 100%; padding: 9px 10px; text-align: left; border: 1px solid #e4e8df; border-radius: 11px; background: #fff; color: #5c6a60; font: inherit; font-size: .82rem; line-height: 1.4; transition: border .18s ease, background .18s ease; }
+.starter-choice:hover { border-color: #a7bba0; background: #fafcf7; }
+.starter-answer-key { display: grid; place-items: center; flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; color: #6c796d; background: #eff2eb; font-size: .72rem; font-weight: 800; }
+.starter-choice.correct { color: #3b6545; border-color: #8eaf89; background: #eff6ec; }
+.starter-choice.correct .starter-answer-key { color: #fff; background: #628863; }
+.starter-choice.incorrect { color: #805448; border-color: #df9c88; background: #fcf0ec; }
+.starter-choice.incorrect .starter-answer-key { color: #fff; background: #bf7662; }
+.starter-feedback { display: flex; align-items: flex-start; gap: 8px; margin: 11px 0 0; color: #4e694f; font-size: .8rem; line-height: 1.5; }
+.starter-feedback svg { flex: 0 0 auto; }
+.starter-feedback.wrong { color: #80574d; }
+
+.objectives-section { margin: 8px auto 19px; padding: 22px; border: 1px solid #e2e7dc; border-radius: 21px; background: linear-gradient(120deg,#eef2e9,#f7f4eb); }
+.objectives-heading { display: flex; align-items: center; gap: 13px; margin-bottom: 16px; }
+.objectives-heading h2 { margin: 0 0 3px; }
+.objectives-heading p { margin: 0; }
+.objectives-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 14px; color: #507251; background: #fffefb; }
+.objectives-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; }
+.objective-panel { min-width: 0; padding: 17px 19px; border: 1px solid #e4e8df; border-radius: 16px; background: rgba(255,254,251,.88); }
+.objective-panel ul { display: grid; gap: 8px; margin: 13px 0 0; padding-left: 21px; color: #5f6f63; font-size: .88rem; line-height: 1.55; }
+.objective-panel li::marker { color: #70906a; }
+.extended-objective li::marker { color: #bd7d6c; }
+
+.plenary-section { padding: 26px 0 54px; }
+.plenary-banner { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; padding: clamp(21px,3vw,31px); border-radius: 23px 23px 0 0; color: #f7f6ef; background: #244a39; }
+.plenary-kicker { display: inline-flex; align-items: center; gap: 7px; color: #e5c879; font-size: .8rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.plenary-banner h2 { margin: 9px 0 8px; font: 600 clamp(1.8rem,3.5vw,2.8rem)/1.06 "Fraunces", Georgia, serif; letter-spacing: -.04em; }
+.plenary-banner p { max-width: 650px; margin: 0; color: #d1ded0; font-size: .93rem; line-height: 1.6; }
+.plenary-progress { flex: 0 0 auto; min-width: 142px; padding: 12px 14px; border: 1px solid rgba(239,242,225,.24); border-radius: 15px; text-align: center; background: rgba(255,255,255,.06); }
+.plenary-progress strong { display: block; color: #e8c574; font: 600 1.55rem "Fraunces", Georgia, serif; }
+.plenary-progress span { display: block; color: #d1dfd0; font-size: .74rem; }
+.plenary-card { padding: clamp(18px,3vw,27px); border: 1px solid #e3e6dd; border-top: 0; border-radius: 0 0 22px 22px; background: #fffefb; box-shadow: 0 12px 30px rgba(50,65,52,.045); }
+.plenary-question-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.plenary-question { min-width: 0; padding: 16px; border: 1px solid #e5e8df; border-radius: 15px; background: #fcfcf8; }
+.plenary-question.is-revealed { border-color: #cad8c4; background: #f8faf5; }
+.plenary-question-number { color: #829082; font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.plenary-question h3 { margin: 9px 0 11px; color: #354a3a; font: 600 1.06rem/1.3 "Fraunces", Georgia, serif; }
+.plenary-answer, .plenary-prompt-note { display: flex; align-items: flex-start; gap: 8px; margin: 0; min-height: 50px; color: #526a54; font-size: .84rem; line-height: 1.55; }
+.plenary-answer svg { flex: 0 0 auto; margin-top: 2px; color: #60835e; }
+.plenary-prompt-note { color: #818b80; }
+.plenary-question-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.plenary-reveal, .plenary-check { min-height: 38px; padding: 7px 11px; border: 1px solid #dfe5db; border-radius: 999px; background: #fff; color: #536858; font: inherit; font-size: .77rem; font-weight: 700; }
+.plenary-check { display: inline-flex; align-items: center; gap: 5px; color: #80584f; }
+.plenary-check[aria-pressed="true"] { color: #426343; border-color: #a8c29d; background: #edf4e9; }
+.plenary-check:disabled { opacity: .48; cursor: not-allowed; }
+.plenary-confidence { display: grid; grid-template-columns: minmax(180px,1fr) minmax(180px,.8fr) auto; align-items: center; gap: 17px; margin-top: 17px; padding: 16px; border-radius: 15px; background: #f3f4ed; }
+.plenary-confidence strong { color: #405543; font-size: .95rem; }
+.plenary-confidence p { margin: 3px 0; color: #778377; font-size: .78rem; }
+.confidence-label { color: #6c8368; font-size: .8rem; font-weight: 750; }
+.plenary-confidence input { width: 100%; accent-color: #628863; }
+.confidence-value { color: #456346; font-weight: 800; }
+.plenary-takeaway { display: flex; align-items: flex-start; gap: 11px; margin-top: 14px; padding: 14px 16px; border-radius: 13px; background: #eef4e9; color: #536954; }
+.takeaway-icon { flex: 0 0 auto; color: #618563; }
+.plenary-takeaway p { margin: 0; font-size: .88rem; line-height: 1.55; }
+.plenary-finish { margin: 13px 2px 0; color: #687569; font-size: .82rem; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .hero-image-wrap { width: min(100%, 460px); }
+  .starter-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 680px) {
+  html { font-size: 17px; }
+  .hero-image-wrap { width: min(100%, 470px); margin: 0 auto; padding: 9px; border-radius: 19px; }
+  .hero-photo { aspect-ratio: 1.48 / 1; border-radius: 12px; }
+  .hero-photo-strip { gap: 7px; }
+  .hero-photo-strip img { height: 78px; }
+  .hero-photo-strip figcaption { padding: 7px 6px; font-size: .72rem; }
+  .image-caption { margin: -50px 7px 11px; padding: 8px 10px; max-width: calc(100% - 14px); }
+  .image-caption .caption-mark { width: 29px; height: 29px; }
+  .caption-title { font-size: .76rem; }
+  .caption-sub { font-size: .7rem; }
+  .quick-nav a { font-size: .78rem; }
+  .tier-toggle button { padding: 7px 9px; font-size: .78rem; }
+  .lesson-block-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .starter-grid, .objectives-grid, .plenary-question-grid { grid-template-columns: 1fr; }
+  .starter-card { padding: 15px; }
+  .objectives-section { padding: 17px; }
+  .objective-panel { padding: 15px; }
+  .plenary-banner { align-items: flex-start; flex-direction: column; border-radius: 19px 19px 0 0; }
+  .plenary-progress { display: flex; align-items: center; gap: 8px; padding: 7px 11px; }
+  .plenary-progress strong { font-size: 1.2rem; }
+  .plenary-confidence { grid-template-columns: 1fr auto; gap: 10px; }
+  .plenary-confidence input { grid-column: 1 / 2; grid-row: 2; }
+  .confidence-value { grid-column: 2; grid-row: 2; }
+}
+
+.image-caption > span:last-child { display: block; min-width: 0; }
+.caption-title, .caption-sub { display: block; line-height: 1.35; }
+
+.pollen-visual-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; align-self: stretch; }
+.pollen-shape-card { display: flex; min-width: 0; min-height: 158px; flex-direction: column; justify-content: center; align-items: center; margin: 0; padding: 9px; border: 1px solid #e7e4d4; border-radius: 15px; text-align: center; background: #fbf7e9; }
+.pollen-shape-card.insect-shape { background: #fbf1e7; border-color: #f0dfd2; }
+.pollen-shape-card.wind-shape { background: #eef3e9; border-color: #dce8d9; }
+.pollen-shape-card svg { display: block; width: min(100%,142px); height: 104px; overflow: visible; }
+.pollen-shape-card figcaption { display: grid; gap: 3px; margin-top: 5px; color: #607064; font-size: .73rem; line-height: 1.35; }
+.pollen-shape-card figcaption strong { color: #3f5544; font-size: .79rem; }
+.pollen-schematic-note { grid-column: 1 / -1; margin: 0; color: #838576; font-size: .73rem; line-height: 1.4; text-align: center; }

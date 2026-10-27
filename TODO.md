@@ -24,8 +24,26 @@
 ## 8. Supplement pollen tube sequence
 - [x] Present a multi-step visual sequence from compatible pollen landing and germination on the stigma, through pollen tube growth down the style, into the ovary and through an ovule's micropyle, to nucleus fusion. Keep pollen tube entry separate from the core definition of fertilisation and visually explain the connection.
 
-## 9. Tier navigation, content structure and supplied PowerPoint imagery
-- [x] Organize syllabus material explicitly by the exact Core points 1–8 and Supplement/Extended points 9–12. Include clear tier badges and a filter to show Core only, Supplement only or all topics. Include responsive visual summaries and useful interactive section navigation. Use soft natural green/floral tones, readable whitespace, modern icon-style elements and accessible mobile-responsive layouts. Select the best suitable photographs and diagrams embedded in the user-supplied PowerPoint `16.3Sexualreproductioninplants.pptx` and use those instead of the former Word-document pictures.
+## 9. Tier navigation, content structure and supplied imagery
+- [x] Organize syllabus material explicitly by the exact Core points 1–8 and Supplement/Extended points 9–12. Include clear tier badges and a filter to show Core only, Supplement only or all topics. Include responsive visual summaries and useful interactive section navigation. Use soft natural green/floral tones, readable whitespace, modern icon-style elements and accessible mobile-responsive layouts.
 
 ## 10. Section-aligned mini-quiz and self-assessment dashboard
-- [x] Place an interactive mini-quiz at the end covering the same Core (1–8) and Supplement (9–12) sections. Provide immediate correct/incorrect feedback and concise explanations, track total score and progress by exact syllabus point, and let the learner retry/reset. Store score only in local page/browser session; do not require login or persistent database.
+- [x] Place an interactive mini-quiz at the end covering the same Core (1–8) and Supplement/Extended (9–12) sections. Provide at least two questions per exact syllabus point (24 questions total), immediate correct/incorrect feedback and concise explanations, track score across questions and progress by exact syllabus point, and let the learner retry/reset. Store score only in local page/browser session; do not require login or persistent database.
+
+## 11. Latest DOCX picture set and image replacement
+- [x] Use the pictures in the latest user attachment `pictures-only-no-word.docx` as the website's source imagery. Use its first picture as the large hero/header image and place the next early pictures in the header gallery where they fit. Use the other relevant pictures to replace the site's earlier PowerPoint/Manus-provided image assets across the lesson; use a picture only where it supports the nearby topic, do not add irrelevant/repeated filler, and retain interactive diagrams/controls and descriptive alt text.
+
+## 12. Readable typography
+- [x] Make website words and answer choices visibly larger than the previous version, especially body copy, navigation/filter controls, labels, answer options, explanations, tables, and mobile text. Preserve clear hierarchy, line length, contrast, and responsive layouts rather than enlarging headings alone.
+
+## 13. Starter and learning objectives
+- [x] After the header and before the main syllabus content, add an interactive Starter with retrieval questions, selectable answers and immediate reveal/feedback. Follow it with explicit learning objectives describing what students should learn from Core points 1–8 and what Extended/Supplement students should additionally explain for points 9–12.
+
+## 14. Expanded interactive questions and answers
+- [x] Add at least two instant-feedback multiple-choice questions for each of the 12 exact syllabus points, for 24 quiz questions total. Show the point number and correct tier on every question, explain each answer immediately, and keep live totals plus Core and Extended breakdowns and per-point progress in the assessment dashboard.
+
+## 15. Explicit Core and Extended point labels
+- [x] Clearly identify each syllabus point as either CORE (points 1–8) or EXTENDED / SUPPLEMENT (points 9–12), on the lesson sections and in the navigation, filter, quiz and assessment dashboard. Do not make students infer the tier from color or section order alone.
+
+## 16. End-of-lesson Plenary
+- [x] Finish the learning content with an interactive Plenary at the end of the page: use short exit-ticket/retrieval prompts spanning the lesson, let students reveal/check answers or record a confidence reflection, and provide a concise takeaway. Place it after the quiz and before the footer so the lesson ends with a plenary.
