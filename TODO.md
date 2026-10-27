@@ -24,8 +24,8 @@
 ## 8. Supplement pollen tube sequence
 - [x] Present a multi-step visual sequence from compatible pollen landing and germination on the stigma, through pollen tube growth down the style, into the ovary and through an ovule's micropyle, to nucleus fusion. Keep pollen tube entry separate from the core definition of fertilisation and visually explain the connection.
 
-## 9. Tier navigation, content structure and supplied imagery
-- [x] Organize syllabus material explicitly by the exact Core points 1–8 and Supplement/Extended points 9–12. Include clear tier badges and a filter to show Core only, Supplement only or all topics. Include responsive visual summaries and useful interactive section navigation. Use soft natural green/floral tones, readable whitespace, modern icon-style elements and accessible mobile-responsive layouts. Select and incorporate the best suitable photographs/diagrams embedded in the user-supplied PowerPoint/Word files.
+## 9. Tier navigation, content structure and supplied PowerPoint imagery
+- [x] Organize syllabus material explicitly by the exact Core points 1–8 and Supplement/Extended points 9–12. Include clear tier badges and a filter to show Core only, Supplement only or all topics. Include responsive visual summaries and useful interactive section navigation. Use soft natural green/floral tones, readable whitespace, modern icon-style elements and accessible mobile-responsive layouts. Select the best suitable photographs and diagrams embedded in the user-supplied PowerPoint `16.3Sexualreproductioninplants.pptx` and use those instead of the former Word-document pictures.
 
 ## 10. Section-aligned mini-quiz and self-assessment dashboard
 - [x] Place an interactive mini-quiz at the end covering the same Core (1–8) and Supplement (9–12) sections. Provide immediate correct/incorrect feedback and concise explanations, track total score and progress by exact syllabus point, and let the learner retry/reset. Store score only in local page/browser session; do not require login or persistent database.

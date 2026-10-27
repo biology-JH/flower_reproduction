@@ -29,6 +29,24 @@ import {
 
 const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v1";
 
+const PPT_MEDIA = {
+  heroFlower: "/manus-storage/image-1-2_cf03faac.jpg",
+  beeFlower: "/manus-storage/image-3-2_16f69e02.png",
+  budStages: "/manus-storage/image-5-2_72872037.png",
+  purpleDaisy: "/manus-storage/image-5-3_bb49a0bf.jpg",
+  flowerAnatomy: "/manus-storage/image-4-2_4e48e5f1.png",
+  windStructures: "/manus-storage/image-12-2_57dd047a.png",
+  pollenMicrograph: "/manus-storage/image-13-2_05635cea.png",
+  fieldContrast: "/manus-storage/image-14-2_e1af4b5b.png",
+  selfPollination: "/manus-storage/image-19-2_eddc30ea.png",
+  crossPollination: "/manus-storage/image-20-2_fcd1862f.png",
+  alpineFlowers: "/manus-storage/image-24-2_255ef2f3.jpg",
+  pollenTube: "/manus-storage/image-26-2_d131e631.png",
+  fertilisation: "/manus-storage/image-27-2_e1143104.png",
+  seedlings: "/manus-storage/image-33-3_304edd13.jpg",
+  germination: "/manus-storage/image-34-2_6579c5e9.png",
+} as const;
+
 type Answers = Record<number, number>;
 
 function readSavedAnswers(): Answers {
@@ -146,7 +164,7 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
           </div>
         </div>
         <div className="hero-image-wrap">
-          <img className="hero-photo" src="/images/hibiscus.jpg" alt="A bee visiting a red hibiscus flower" />
+          <img className="hero-photo" src={PPT_MEDIA.beeFlower} alt="A bee collecting pollen from a vivid purple coneflower, photographed in the supplied PowerPoint" />
           <div className="image-caption">
             <span className="caption-mark"><Flower2 size={18} /></span>
             <span><span className="caption-title">Field note 01 · Pollinator in action</span><span className="caption-sub">Pollen travels. The story begins.</span></span>
@@ -178,8 +196,12 @@ function AnatomyExplorer({ activePart, setActivePart }: { activePart: FlowerPart
   return (
     <div className="section-card-pad anatomy-layout">
       <figure className="anatomy-art">
-        <img src="/images/flower-anatomy.png" alt="Labeled flower cross-section identifying stigma, style, anther, filament, ovary, ovules and sepals, alongside a wind-pollinated grass flower" />
-        <figcaption className="art-note">A supplied study diagram: the open flower and wind-pollinated grass show two different floral plans.</figcaption>
+        <img src={PPT_MEDIA.flowerAnatomy} alt="PowerPoint diagram of an insect-pollinated flower labelled with anther, filament, stigma, style, ovary, ovule, petals and sepals" />
+        <div className="botanical-photo-pair" aria-label="PowerPoint flower photographs">
+          <img src={PPT_MEDIA.budStages} alt="Two stages of a pink flower bud opening" />
+          <img src={PPT_MEDIA.purpleDaisy} alt="A purple daisy showing conspicuous petals" />
+        </div>
+        <figcaption className="art-note">Flower anatomy and close-up bloom photographs from the supplied PowerPoint.</figcaption>
       </figure>
       <div className="part-explorer">
         <div>
@@ -270,7 +292,7 @@ function WindComparison() {
         <article className="compare-card">
           <div className="compare-card-head"><h3>Wind-pollinated</h3><span>Exposed to air</span></div>
           <div className="compare-card-body">
-            <div className="structure-sketch"><StructureSketch kind="wind" /></div>
+            <div className="structure-sketch"><img className="wind-source-image" src={PPT_MEDIA.windStructures} alt="PowerPoint diagram showing an exposed feathery stigma and loosely hinged, versatile anther" /></div>
             <div className="compare-fact"><strong>Anthers</strong>Loosely hinged (versatile) on long, flexible filaments; they sway and release pollen into the air.</div>
             <div className="compare-fact"><strong>Stigma</strong>Large, feathery and exposed, with a broad surface that can catch airborne pollen.</div>
           </div>
@@ -285,8 +307,8 @@ function PollenComparison() {
   return (
     <div className="section-card-pad pollen-grid">
       <figure className="pollen-figure">
-        <img src="/images/pollen-grains.png" alt="Supplied comparison showing a large spiny pollen grain beside smaller smoother pollen grains" />
-        <figcaption>Illustration from the supplied IGCSE plant-reproduction worksheet</figcaption>
+        <img src={PPT_MEDIA.pollenMicrograph} alt="Scanning electron micrographs from the PowerPoint comparing pollen grain size and surface texture" />
+        <figcaption>PowerPoint scanning electron micrographs reveal pollen grain surfaces at different scales.</figcaption>
       </figure>
       <div className="pollen-facts">
         <div className="pollen-type insect">
@@ -313,7 +335,7 @@ function PollinationDefinition() {
           <p className="definition-text"><strong>Pollination</strong> is the transfer of pollen grains from an <strong>anther</strong> to a <strong>stigma.</strong></p>
           <p className="definition-note">It describes pollen transfer. It is a different event from fertilisation, which happens later inside an ovule.</p>
         </div>
-        <img className="definition-photo" src="/images/bee-on-flower.jpg" alt="A bee gathering pollen while visiting a flower" />
+        <img className="definition-photo" src={PPT_MEDIA.heroFlower} alt="Close-up of pink flower reproductive parts from the supplied PowerPoint" />
       </div>
       <div className="distinction-strip"><CircleHelp size={16} /><span><strong>Exam-language check:</strong> pollen moves anther → stigma. Do not define pollination as the fusion of nuclei—that is fertilisation.</span></div>
     </div>
@@ -383,6 +405,10 @@ function FertilisationTimeline() {
       <div className={`nucleus-scene ${step === 2 ? "fused" : ""}`} aria-live="polite">
         {step < 2 ? <><div className="nucleus pollen">Pollen<br />nucleus</div><span className="fusion-plus">{step === 0 ? "→" : "+"}</span><div className="nucleus egg">Ovule<br />nucleus</div></> : <div className="nucleus fused">Fused<br />nuclei · zygote</div>}
       </div>
+      <figure className="fertilisation-reference">
+        <img src={PPT_MEDIA.fertilisation} alt="PowerPoint ovule diagram showing the pollen nucleus and female nucleus meeting inside an ovule" />
+        <figcaption>Inside the ovule: the two nuclei meet and fuse.</figcaption>
+      </figure>
       <div className="key-callout" style={{ marginTop: 13 }}><CheckCircle2 size={17} /><span><strong>Fertilisation is the fusion of a pollen nucleus with the nucleus in an ovule.</strong> Pollination is the earlier transfer to the stigma.</span></div>
     </div>
   );
@@ -393,21 +419,27 @@ function AdaptationMatrix() {
   const [ascending, setAscending] = useState(true);
   const rows = useMemo(() => adaptationRows.filter((row) => filter === "all" || row.type === filter).toSorted((a, b) => ascending ? a.feature.localeCompare(b.feature) : b.feature.localeCompare(a.feature)), [filter, ascending]);
   return (
-    <div className="section-card-pad">
-      <div className="adaptation-toolbar">
-        <label className="sr-only" htmlFor="adaptation-filter">Filter adaptation table</label>
-        <select id="adaptation-filter" value={filter} onChange={(event) => setFilter(event.target.value as typeof filter)}>
-          <option value="all">All adaptations</option><option value="attract">Attracting pollinators</option><option value="transfer">Position for pollen transfer</option>
-        </select>
-        <button className="sort-button" type="button" onClick={() => setAscending((value) => !value)}><ArrowUpDown size={14} style={{ verticalAlign: "-3px", marginRight: 5 }} />Sort {ascending ? "A–Z" : "Z–A"}</button>
+    <div className="section-card-pad adaptation-layout">
+      <figure className="adaptation-field-figure">
+        <img src={PPT_MEDIA.fieldContrast} alt="Flower-rich meadow plants growing beside a dense cereal crop" />
+        <figcaption>A flower-rich meadow beside a cereal field: two different floral settings.</figcaption>
+      </figure>
+      <div className="adaptation-content">
+        <div className="adaptation-toolbar">
+          <label className="sr-only" htmlFor="adaptation-filter">Filter adaptation table</label>
+          <select id="adaptation-filter" value={filter} onChange={(event) => setFilter(event.target.value as typeof filter)}>
+            <option value="all">All adaptations</option><option value="attract">Attracting pollinators</option><option value="transfer">Position for pollen transfer</option>
+          </select>
+          <button className="sort-button" type="button" onClick={() => setAscending((value) => !value)}><ArrowUpDown size={14} style={{ verticalAlign: "-3px", marginRight: 5 }} />Sort {ascending ? "A–Z" : "Z–A"}</button>
+        </div>
+        <div className="table-scroll">
+          <table className="adaptation-table">
+            <thead><tr><th scope="col">Flower feature</th><th scope="col">Insect-pollinated</th><th scope="col">Wind-pollinated</th></tr></thead>
+            <tbody>{rows.map((row) => <tr key={row.feature}><td>{row.feature}</td><td>{row.insect}</td><td>{row.wind}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <div className="key-callout" style={{ marginTop: 13 }}><Sparkles size={16} /><span>Adaptations work as a <strong>combination</strong>: attractants invite insects, while organ position and pollen shape support the route the pollen takes.</span></div>
       </div>
-      <div className="table-scroll">
-        <table className="adaptation-table">
-          <thead><tr><th scope="col">Flower feature</th><th scope="col">Insect-pollinated</th><th scope="col">Wind-pollinated</th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row.feature}><td>{row.feature}</td><td>{row.insect}</td><td>{row.wind}</td></tr>)}</tbody>
-        </table>
-      </div>
-      <div className="key-callout" style={{ marginTop: 13 }}><Sparkles size={16} /><span>Adaptations work as a <strong>combination</strong>: attractants invite insects, while organ position and pollen shape support the route the pollen takes.</span></div>
     </div>
   );
 }
@@ -447,8 +479,9 @@ function GerminationExplorer() {
           <p className="exam-note"><strong>Exam note:</strong> light and soil are not required for a seed to begin germinating. Suitable temperature depends on the species.</p>
         </div>
         <figure style={{ margin: 0 }}>
-          <div className="anatomy-art" style={{ padding: 10 }}><img src="/images/germination-experiment.png" alt="Four test tubes showing seed germination conditions, labelled A to D" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
-          <figcaption className="art-note">A classic investigation: change one condition at a time. Only the control has water, oxygen and warmth together.</figcaption>
+          <div className="anatomy-art" style={{ padding: 10 }}><img src={PPT_MEDIA.germination} alt="PowerPoint germination experiment with cress seeds, wet and dry wool, boiled water, and a cold 4 degree tube" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
+          <img className="seedling-photo" src={PPT_MEDIA.seedlings} alt="Young seedlings emerging from seeds in the supplied PowerPoint" />
+          <figcaption className="art-note">The PowerPoint experiment isolates germination conditions; the photo shows seedlings beginning to grow.</figcaption>
         </figure>
       </div>
     </div>
@@ -484,6 +517,10 @@ function SelfPollinationFlow() {
         <div className="flow-node"><span className="flower-mark"><FlowerMark color="#e0a174" /></span><span>{isSameFlower ? "Same flower · stigma" : "Flower 2 · stigma"}</span></div>
       </div>
       <p className="flow-fact"><strong>Self-pollination:</strong> pollen moves from an anther to the stigma of the same flower, or to a different flower on the same plant. {isSameFlower ? "The pollen returns to the stigma of its own flower." : "Both flowers belong to the same individual plant."}</p>
+      <figure className="source-flow-figure anatomy-art">
+        <img src={PPT_MEDIA.selfPollination} alt="PowerPoint diagram showing self-pollination within a flower and between flowers on the same plant" />
+        <figcaption className="art-note">Both routes are shown in the supplied PowerPoint diagram.</figcaption>
+      </figure>
     </div>
   );
 }
@@ -504,8 +541,8 @@ function CrossPollinationFlow() {
       </div>
       <p className="flow-fact"><strong>Cross-pollination:</strong> pollen moves from an anther to a flower on a <strong>different plant of the same species.</strong> The second plant boundary is the key distinction from self-pollination.</p>
       <figure className="anatomy-art" style={{ margin: "16px 0 0", padding: 10 }}>
-        <img src="/images/pollination-pathways.png" alt="Supplied diagram showing three pollen-transfer pathways between flowers on Plant 1 and Plant 2" style={{ aspectRatio: "4 / 3", maxHeight: 240 }} />
-        <figcaption className="art-note">The source diagram compares pollen routes across flowers on one plant and between two plants.</figcaption>
+        <img src={PPT_MEDIA.crossPollination} alt="PowerPoint diagram showing pollen moving from one plant's anther to a flower's stigma on a different plant" style={{ maxHeight: 240 }} />
+        <figcaption className="art-note">A different plant of the same species receives the pollen.</figcaption>
       </figure>
     </div>
   );
@@ -531,7 +568,10 @@ function PopulationImpact() {
           <tbody>{impactRows.map((row) => <tr key={row.label}><td>{row.label}</td><td className={focus === "self" ? "focus-column" : ""}>{row.self}</td><td className={focus === "cross" ? "focus-column" : ""}>{row.cross}</td></tr>)}</tbody>
         </table>
       </div>
-      <div className="supplement-note" style={{ marginTop: 13 }}><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div>
+      <div className="population-field-row">
+        <figure><img src={PPT_MEDIA.alpineFlowers} alt="Wildflowers growing in a rocky alpine environment beneath mountain peaks" /><figcaption>Plants encounter different environments.</figcaption></figure>
+        <div><div className="supplement-note"><strong>Balanced answer:</strong> self-pollination can provide reproductive assurance when another plant or vector is scarce; cross-pollination can increase variation, which may help a population respond to change.</div><p className="part-intro">More variation can increase the chance that some plants suit a changed environment, but it does not guarantee survival.</p></div>
+      </div>
     </div>
   );
 }
@@ -548,8 +588,8 @@ function PollenTubeSequence() {
   return (
     <div className="section-card-pad tube-layout">
       <figure className="tube-figure" style={{ margin: 0 }}>
-        <img src="/images/pollen-tube.png" alt="Labeled diagram of a pollen tube growing from the stigma down the style into an ovule through the micropyle" />
-        <figcaption className="art-note">The pollen tube connects the stigma to the ovule; its route is a Supplement point.</figcaption>
+        <img src={PPT_MEDIA.pollenTube} alt="PowerPoint diagram of a pollen grain germinating on the stigma and a tube growing through the style to the ovule's micropyle" />
+        <figcaption className="art-note">The supplied PowerPoint labels the pollen tube route to the micropyle.</figcaption>
       </figure>
       <div>
         <div className="step-list" aria-label="Pollen tube sequence">
