@@ -47,3 +47,18 @@
 
 ## 16. End-of-lesson Plenary
 - [x] Finish the learning content with an interactive Plenary at the end of the page: use short exit-ticket/retrieval prompts spanning the lesson, let students reveal/check answers or record a confidence reflection, and provide a concise takeaway. Place it after the quiz and before the footer so the lesson ends with a plenary.
+
+## 17. Full-bleed header image
+- [x] Set the header picture/banner component to 100vw or 100% of the viewport width and eliminate left/right margins or padding for that section, without causing horizontal overflow elsewhere.
+
+## 18. Larger image presentation and clean captions
+- [x] Maximize the scale of embedded diagrams and supporting images; make images dynamically fill their containers while maintaining crisp aspect ratios. Remove visible source text, URLs and image attributions beneath images, while preserving descriptive alt text for accessibility and keeping any essential biological explanation in the lesson copy.
+
+## 19. Typography and font rendering
+- [x] Increase the global base font size across headings, body text and interactive elements to improve readability. Enforce antialiasing, appropriate font-family fallbacks and consistent font-rendering rules to avoid distorted or jagged text spacing.
+
+## 20. Touch- and mouse-friendly drag-and-drop learning game
+- [x] Replace static matching/question interactions or basic quiz-only practice with a dynamic, touch- and mouse-friendly drag-and-drop engine. In this Biology module, use draggable flower structures and clear matching landing zones for their functions rather than introducing unrelated sports content. Give instant visual feedback for correct and incorrect drops with colors and subtle animation, support keyboard/tap operation as an accessible alternative, and provide progress/reset controls.
+
+## 21. Contemporary visual polish
+- [x] Keep a clean modern design system with generous whitespace, consistent card corner radii, smooth hover/focus transitions and a sophisticated palette, while preserving the established natural Biology identity and responsive syllabus navigation.

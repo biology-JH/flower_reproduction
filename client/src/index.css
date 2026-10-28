@@ -589,3 +589,154 @@ body { font-size: 1rem; line-height: 1.7; }
 
 .image-caption > span:last-child { display: block; min-width: 0; }
 .caption-title, .caption-sub { display: block; line-height: 1.35; }
+
+/* Full-bleed lesson banner, readable type and image-first figures */
+html { font-size: 19px; -webkit-text-size-adjust: 100%; font-kerning: normal; text-rendering: optimizeLegibility; font-synthesis: none; }
+body { font-size: 1rem; line-height: 1.7; letter-spacing: normal; font-family: "DM Sans", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+.hero { width: 100%; padding: 0 0 24px; overflow: hidden; }
+.hero-image-wrap { position: relative; width: 100%; max-width: none; height: clamp(460px, 50vw, 640px); min-height: 0; aspect-ratio: auto; margin: 0; padding: 0; overflow: hidden; border-radius: 0; background: #263a2e; }
+.hero-photo { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; border-radius: 0; object-fit: cover; object-position: center 44%; }
+.hero-banner-shade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg,rgba(21,42,30,.83) 0%,rgba(25,47,34,.68) 36%,rgba(24,42,33,.2) 74%,rgba(24,42,33,.08) 100%),linear-gradient(0deg,rgba(17,32,23,.3),transparent 48%); }
+.hero-copy { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; width: min(1180px,calc(100% - 48px)); height: 100%; margin: 0 auto; padding: clamp(32px,6vw,78px) 0; color: #fff; }
+.hero-copy .eyebrow { color: #eed99f; font-size: .82rem; letter-spacing: .17em; }
+.hero-title { max-width: 840px; margin: 17px 0 17px; color: #fff; font-size: clamp(3.4rem,8vw,7rem); line-height: .96; text-shadow: 0 4px 22px rgba(0,0,0,.18); }
+.hero-title em { color: #efd07f; }
+.hero-lede { max-width: 620px; margin: 0; color: rgba(255,255,255,.93); font-size: clamp(1.06rem,1.8vw,1.28rem); line-height: 1.6; text-shadow: 0 2px 12px rgba(0,0,0,.18); }
+.hero-actions { margin-top: 23px; }
+.hero-actions .button-primary { color: #263a2e; border-color: #f0d17e; background: #f0d17e; box-shadow: 0 8px 24px rgba(0,0,0,.13); }
+.hero-actions .button-primary:hover { color: #20372a; background: #f8dda0; }
+.hero-actions .button-secondary { color: #254432; border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.94); }
+.image-caption { position: absolute; z-index: 3; right: clamp(16px,4vw,54px); bottom: 20px; left: auto; display: flex; width: fit-content; max-width: min(270px,calc(100% - 32px)); margin: 0; padding: 11px 14px; border: 1px solid rgba(255,255,255,.42); background: rgba(255,254,251,.95); backdrop-filter: blur(9px); box-shadow: 0 10px 32px rgba(17,32,23,.2); }
+.hero-meta.page-wrap { display: grid; grid-template-columns: minmax(250px,.8fr) minmax(0,1.2fr); align-items: center; gap: 23px; padding: 22px 0 8px; }
+.hero-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 0; padding: 0; border: 0; }
+.hero-stat { font-size: .88rem; }
+.hero-photo-strip { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 0; }
+.hero-photo-strip figure { min-width: 0; margin: 0; overflow: hidden; border: 1px solid #e2e7dc; border-radius: 16px; background: #f2f4ed; }
+.hero-photo-strip img { display: block; width: 100%; height: auto; aspect-ratio: 1.55 / 1; object-fit: cover; transition: transform .35s ease; }
+.hero-photo-strip figure:hover img { transform: scale(1.035); }
+.hero-photo-strip figcaption { padding: 9px 11px; color: #536656; font-size: .84rem; font-weight: 700; }
+.hero-meta img, .section-card img { max-width: 100%; }
+.anatomy-art img, .pollen-figure img, .source-flow-figure img, .tube-figure img { display: block; width: 100%; height: auto; max-height: none; object-fit: contain; }
+.anatomy-art > img { aspect-ratio: auto; }
+.anatomy-art .botanical-photo-pair img { width: 100%; height: auto; aspect-ratio: 1.55 / 1; object-fit: cover; }
+.botanical-photo-pair { gap: 11px; }
+.structure-sketch { height: auto; min-height: 0; padding: 7px; }
+.structure-photo-pair { width: 100%; height: auto; aspect-ratio: 1.55 / 1; gap: 8px; padding: 4px; }
+.structure-photo-pair img { width: 100%; height: 100%; min-width: 0; object-fit: cover; }
+.structure-sketch .wind-source-image { display: block; width: 100%; max-width: 100%; height: auto; max-height: none; object-fit: contain; }
+.pollen-figure { width: 100%; }
+.pollen-figure img { border-radius: 12px; }
+.pollen-figure figcaption, .fertilisation-reference figcaption, .adaptation-field-figure figcaption, .population-field-row figcaption, .art-note { font-size: .82rem; line-height: 1.55; }
+.definition-photo-stack { width: min(100%,230px); height: auto; aspect-ratio: 1/1; }
+.definition-photo { width: 80%; height: 80%; aspect-ratio: 1/1; }
+.definition-photo-inset { width: 46%; height: 46%; aspect-ratio: 1/1; }
+.fertilisation-reference { display: grid; grid-template-columns: minmax(200px,.55fr) minmax(0,1.45fr); gap: 19px; align-items: center; padding: 14px 17px; }
+.fertilisation-reference img { width: 100%; max-width: 340px; height: auto; aspect-ratio: 1.2 / 1; object-fit: contain; }
+.adaptation-field-figure img { width: 100%; height: auto; aspect-ratio: 1.2 / 1; object-fit: cover; }
+.seedling-photo { width: 100%; height: auto; aspect-ratio: 1.35 / 1; object-fit: cover; }
+.germination-figure { padding: clamp(10px,2vw,18px); }
+.germination-figure img { width: 100%; height: auto; max-height: none; aspect-ratio: auto; }
+.source-flow-figure img { width: 100%; height: auto; max-height: none; }
+.population-field-row { align-items: flex-start; gap: 19px; }
+.population-field-row figure { flex: 0 1 clamp(190px,30vw,330px); min-width: 0; }
+.population-field-row img { display: block; width: 100%; height: auto; aspect-ratio: 1.05 / 1; object-fit: cover; }
+.tube-figure img { width: 100%; height: auto; aspect-ratio: 1.05 / 1; }
+
+/* Matching game: touch-safe drag targets with a keyboard/tap path */
+.function-match-game { margin-top: 17px; padding: clamp(15px,2.4vw,25px); border: 1px solid #e0e7dc; border-radius: 21px; background: linear-gradient(140deg,#f5f7f0,#fbf8f1); }
+.match-game-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.match-kicker { display: inline-block; color: #58765c; font-size: .82rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.match-instruction { margin: 6px 0 0; color: #5f6f63; font-size: .94rem; line-height: 1.55; }
+.match-score { display: flex; align-items: baseline; gap: 5px; flex: 0 0 auto; padding: 9px 13px; border: 1px solid #dce6d8; border-radius: 999px; color: #607561; background: #fffefb; font-size: .8rem; }
+.match-score strong { color: #315b3d; font: 600 1.35rem "Fraunces",Georgia,serif; }
+.match-board { display: grid; grid-template-columns: minmax(220px,.74fr) minmax(0,1.26fr); gap: 15px; margin-top: 17px; }
+.match-bank, .match-targets { min-width: 0; padding: 15px; border: 1px solid #e4e8df; border-radius: 16px; background: rgba(255,254,251,.9); }
+.match-bank h3, .match-targets h3 { display: flex; justify-content: space-between; align-items: center; gap: 9px; margin: 0 0 13px; color: #3b5141; font: 600 1.06rem "Fraunces",Georgia,serif; }
+.match-bank h3 small, .match-targets h3 small { color: #849184; font: 750 .71rem "DM Sans",sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.draggable-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.drag-part { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 64px; padding: 9px; border: 1px solid #dfe6dc; border-radius: 13px; color: #49604e; background: #fbfcf8; text-align: left; font: inherit; touch-action: none; user-select: none; transition: border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease; cursor: grab; }
+.drag-part:hover { transform: translateY(-2px); border-color: #a2b99c; box-shadow: 0 6px 16px rgba(54,79,57,.08); }
+.drag-part:active { cursor: grabbing; }
+.drag-part.selected { border-color: #638660; background: #edf4e9; box-shadow: 0 0 0 3px rgba(99,134,96,.13); }
+.drag-part.matched { color: #436548; border-color: #b8cfb3; background: #eff6ec; cursor: default; }
+.drag-part > span:nth-child(2) { min-width: 0; }
+.drag-part strong { display: block; color: #3c5542; font-size: .84rem; line-height: 1.25; }
+.drag-part small { display: block; margin-top: 3px; color: #849184; font-size: .72rem; line-height: 1.2; }
+.drag-part > svg { flex: 0 0 auto; margin-left: auto; color: #638763; }
+.drag-grip { flex: 0 0 auto; color: #8a9a88; font-size: 1.25rem; line-height: 1; }
+.drop-target-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.drop-zone { display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-width: 0; min-height: 98px; padding: 12px; border: 1px dashed #bdcbb8; border-radius: 13px; color: #526456; background: #f9faf6; text-align: left; font: inherit; transition: border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease; }
+.drop-zone:hover { border-color: #87a17e; background: #f2f6ef; }
+.drop-zone:focus-visible { outline: 3px solid #85a77a; outline-offset: 2px; }
+.drop-zone-copy { color: #57685a; font-size: .84rem; line-height: 1.42; }
+.drop-zone-label { display: inline-flex; align-items: center; gap: 6px; color: #879285; font-size: .72rem; font-weight: 750; }
+.drop-zone.matched { border-style: solid; border-color: #91ad89; background: #edf5e9; }
+.drop-zone.matched .drop-zone-label { color: #416b48; }
+.drop-zone.incorrect { border-color: #cc8875; background: #fff0ea; animation: match-shake .26s ease-in-out; }
+.drop-zone.correct { animation: match-pop .35s ease-out; }
+.match-live { display: flex; align-items: flex-start; gap: 9px; min-height: 50px; margin-top: 13px; padding: 11px 13px; border: 1px solid #e1e7dc; border-radius: 13px; color: #5e6f61; background: #fffefb; font-size: .84rem; line-height: 1.5; }
+.match-live.correct { color: #3f6546; border-color: #c4d6bf; background: #f1f7ee; }
+.match-live.incorrect { color: #875d50; border-color: #edd1c5; background: #fcf2ed; }
+.match-live-dot { flex: 0 0 auto; width: 9px; height: 9px; margin-top: 7px; border-radius: 50%; background: #86a17e; }
+.match-live.incorrect .match-live-dot { background: #c7836e; }
+.match-game-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; color: #718074; font-size: .82rem; }
+.match-game-footer strong { color: #3d5d42; }
+.match-reset { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 13px; border: 1px solid #dfe5db; border-radius: 999px; color: #546958; background: #fff; font: inherit; font-size: .8rem; font-weight: 750; transition: background .18s ease, transform .18s ease; }
+.match-reset:hover { transform: translateY(-1px); background: #edf3e9; }
+.drag-ghost { position: fixed; z-index: 80; top: 0; left: 0; pointer-events: none; padding: 11px 15px; border: 1px solid #6c9066; border-radius: 13px; color: #fff; background: #355c40; box-shadow: 0 12px 28px rgba(35,60,40,.23); font-size: .9rem; font-weight: 800; white-space: nowrap; }
+@keyframes match-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes match-pop { 50% { transform: scale(1.025); } }
+
+@media (max-width: 900px) {
+  .hero-image-wrap { height: clamp(450px,62vw,570px); }
+  .hero-meta.page-wrap { grid-template-columns: 1fr; gap: 16px; }
+  .hero-stats { justify-content: space-between; }
+  .match-board { grid-template-columns: minmax(190px,.7fr) minmax(0,1.3fr); }
+  .adaptation-field-figure img { height: auto; }
+}
+@media (max-width: 680px) {
+  html { font-size: 18px; }
+  .hero { padding-bottom: 18px; }
+  .hero-image-wrap { height: min(690px,calc(100svh - 108px)); min-height: 480px; }
+  .hero-photo { object-position: 54% center; }
+  .hero-banner-shade { background: linear-gradient(180deg,rgba(20,41,30,.12) 0%,rgba(20,41,30,.32) 31%,rgba(20,41,30,.84) 100%); }
+  .hero-copy { width: calc(100% - 34px); padding: 35px 0 81px; justify-content: flex-end; }
+  .hero-copy .eyebrow { font-size: .72rem; letter-spacing: .12em; }
+  .hero-title { max-width: 520px; margin: 13px 0 12px; font-size: clamp(3rem,14vw,4.35rem); }
+  .hero-lede { max-width: 520px; font-size: 1rem; }
+  .hero-actions { gap: 8px; margin-top: 17px; }
+  .hero-actions .button-primary, .hero-actions .button-secondary { min-height: 46px; padding: 0 13px; font-size: .83rem; }
+  .image-caption { right: 12px; bottom: 10px; max-width: 200px; padding: 7px 9px; }
+  .image-caption .caption-mark { width: 28px; height: 28px; }
+  .caption-title { font-size: .78rem; }
+  .caption-sub { font-size: .7rem; }
+  .hero-meta.page-wrap { width: min(100% - 30px,560px); gap: 13px; padding-top: 15px; }
+  .hero-stats { justify-content: space-between; gap: 9px 12px; }
+  .hero-stat { gap: 6px; font-size: .77rem; }
+  .hero-stat strong { font-size: .9rem; }
+  .hero-photo-strip { gap: 8px; }
+  .hero-photo-strip img { aspect-ratio: 1.25 / 1; }
+  .hero-photo-strip figcaption { padding: 8px; font-size: .74rem; }
+  .anatomy-art img { max-height: none; }
+  .fertilisation-reference { grid-template-columns: 1fr; }
+  .fertilisation-reference img { width: 100%; max-width: 360px; height: auto; }
+  .adaptation-field-figure img { height: auto; }
+  .population-field-row { flex-direction: column; }
+  .population-field-row figure { width: 100%; max-width: 360px; flex-basis: auto; }
+  .population-field-row img { width: 100%; height: auto; }
+  .match-game-topline { align-items: flex-start; }
+  .match-board { grid-template-columns: 1fr; }
+  .match-bank, .match-targets { padding: 13px; }
+  .drop-target-grid { grid-template-columns: 1fr; }
+  .draggable-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .drag-part { min-height: 61px; padding: 8px; }
+  .drag-part strong { font-size: .8rem; }
+  .drag-part small { font-size: .68rem; }
+  .drop-zone { min-height: 82px; }
+  .match-game-footer { align-items: flex-start; }
+  .function-match-game { padding: 13px; }
+  .flow-diagram { padding: 18px 10px; }
+  .flow-node { min-width: 90px; }
+  .flower-mark { width: clamp(86px,24vw,112px); height: auto; aspect-ratio: 1.2 / 1; }
+  .flower-mark img { width: 100%; height: 100%; }
+}

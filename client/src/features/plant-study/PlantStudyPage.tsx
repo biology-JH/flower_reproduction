@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -168,7 +168,9 @@ function SectionNav({ filter }: { filter: TierFilter }) {
 function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
   return (
     <section className="hero" id="top">
-      <div className="page-wrap hero-grid">
+      <div className="hero-image-wrap">
+        <img className="hero-photo" src={DOCX_MEDIA.header} alt="Pink lilies with a bee carrying pollen between anthers and stigmas" />
+        <div className="hero-banner-shade" aria-hidden="true" />
         <div className="hero-copy">
           <div className="eyebrow">IGCSE Biology · Topic 16.3</div>
           <h1 className="hero-title">A flower’s<br />next <em>chapter.</em></h1>
@@ -177,22 +179,21 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
             <a className="button-primary" href="#starter">Start the warm-up <ArrowRight size={16} /></a>
             <button className="button-secondary" type="button" onClick={() => { onFilter("supplement"); document.getElementById("supplement-09")?.scrollIntoView({ behavior: "smooth" }); }}>Go to Extended <Sprout size={15} /></button>
           </div>
-          <div className="hero-stats" aria-label="Lesson overview">
-            <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
-            <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
-            <div className="hero-stat"><BookOpen size={15} /><span><strong>24</strong> quiz questions</span></div>
-          </div>
         </div>
-        <div className="hero-image-wrap">
-          <img className="hero-photo" src={DOCX_MEDIA.header} alt="Wide pink lilies with a bee carrying pollen between their anthers and stigmas—the first picture in the supplied DOCX" />
-          <div className="image-caption">
-            <span className="caption-mark"><Flower2 size={18} /></span>
-            <span><span className="caption-title">Opening image · pollen in motion</span><span className="caption-sub">Start with the journey from anther to stigma.</span></span>
-          </div>
-          <div className="hero-photo-strip" aria-label="Two more pictures from the supplied DOCX">
-            <figure><img src={DOCX_MEDIA.headerWind} alt="Close view of wind-pollinated grass with hanging anthers and feathery stigmas" /><figcaption>Wind · exposed structures</figcaption></figure>
-            <figure><img src={DOCX_MEDIA.headerBee} alt="A bee visiting the reproductive parts of a pink flower" /><figcaption>Insect · pollen transfer</figcaption></figure>
-          </div>
+        <div className="image-caption">
+          <span className="caption-mark"><Flower2 size={18} /></span>
+          <span><span className="caption-title">Pollen in motion</span><span className="caption-sub">Anther → pollen → stigma</span></span>
+        </div>
+      </div>
+      <div className="page-wrap hero-meta">
+        <div className="hero-stats" aria-label="Lesson overview">
+          <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
+          <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
+          <div className="hero-stat"><BookOpen size={17} /><span><strong>24</strong> quiz questions</span></div>
+        </div>
+        <div className="hero-photo-strip" aria-label="Pollination examples">
+          <figure><img src={DOCX_MEDIA.headerWind} alt="Close view of wind-pollinated grass with hanging anthers and feathery stigmas" /><figcaption>Wind · exposed structures</figcaption></figure>
+          <figure><img src={DOCX_MEDIA.headerBee} alt="A bee visiting the reproductive parts of a pink flower" /><figcaption>Insect · pollen transfer</figcaption></figure>
         </div>
       </div>
     </section>
@@ -220,8 +221,8 @@ function AnatomyExplorer({ activePart, setActivePart }: { activePart: FlowerPart
   return (
     <div className="section-card-pad anatomy-layout">
       <figure className="anatomy-art">
-        <img src={PPT_MEDIA.flowerAnatomy} alt="Flower anatomy diagram from the supplied PowerPoint, labelled with petals, sepals, stamens, anthers, stigma, style, ovary and ovules" />
-        <div className="botanical-photo-pair" aria-label="Flower images from the supplied PowerPoint">
+        <img src={PPT_MEDIA.flowerAnatomy} alt="Flower anatomy diagram labelled with petals, sepals, stamens, anthers, stigma, style, ovary and ovules" />
+        <div className="botanical-photo-pair" aria-label="Two flower examples">
           <img src={PPT_MEDIA.budStages} alt="Pink flower buds at two stages before opening" />
           <img src={PPT_MEDIA.purpleDaisy} alt="Purple daisy showing its conspicuous petals" />
         </div>
@@ -247,19 +248,117 @@ function AnatomyExplorer({ activePart, setActivePart }: { activePart: FlowerPart
   );
 }
 
+function FlowerFunctionMatch({ onMatch }: { onMatch: (part: FlowerPartId) => void }) {
+  const [matches, setMatches] = useState<Partial<Record<FlowerPartId, FlowerPartId>>>({});
+  const [selectedPart, setSelectedPart] = useState<FlowerPartId | null>(null);
+  const [draggedPart, setDraggedPart] = useState<FlowerPartId | null>(null);
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const [feedback, setFeedback] = useState<{ targetId: FlowerPartId; kind: "correct" | "incorrect" } | null>(null);
+  const [message, setMessage] = useState("Drag a flower part to its function. On a keyboard: choose a part, then activate a function target.");
+  const feedbackTimer = useRef<number | undefined>(undefined);
+  const matchedParts = useMemo(() => Object.values(matches).filter((part): part is FlowerPartId => Boolean(part)), [matches]);
+  const matchedCount = matchedParts.length;
+
+  const matchPart = useCallback((partId: FlowerPartId, targetId: FlowerPartId) => {
+    if (matches[targetId]) {
+      setMessage("That function already has a match. Try another target.");
+      return;
+    }
+    const part = flowerParts.find((item) => item.id === partId);
+    if (!part || matchedParts.includes(partId)) return;
+    if (partId === targetId) {
+      if (feedbackTimer.current !== undefined) window.clearTimeout(feedbackTimer.current);
+      setMatches((current) => ({ ...current, [targetId]: partId }));
+      setFeedback({ targetId, kind: "correct" });
+      setSelectedPart(null);
+      setMessage(matchedCount === flowerParts.length - 1 ? "All ten matches are correct. Excellent structure–function thinking." : `Correct — ${part.name}: ${part.function}`);
+      onMatch(partId);
+    } else {
+      setFeedback({ targetId, kind: "incorrect" });
+      setMessage("Not quite. Re-read the function and try a different structure.");
+      if (feedbackTimer.current !== undefined) window.clearTimeout(feedbackTimer.current);
+      feedbackTimer.current = window.setTimeout(() => setFeedback(null), 850);
+    }
+  }, [matches, matchedParts, matchedCount, onMatch]);
+
+  useEffect(() => {
+    if (!draggedPart) return;
+    const move = (event: PointerEvent) => setPointer({ x: event.clientX, y: event.clientY });
+    const drop = (event: PointerEvent) => {
+      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>("[data-function-target]");
+      const targetId = target?.dataset.functionTarget as FlowerPartId | undefined;
+      if (targetId) matchPart(draggedPart, targetId);
+      setDraggedPart(null);
+    };
+    const cancel = () => setDraggedPart(null);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", drop);
+    window.addEventListener("pointercancel", cancel);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", drop);
+      window.removeEventListener("pointercancel", cancel);
+    };
+  }, [draggedPart, matchPart]);
+
+  useEffect(() => () => {
+    if (feedbackTimer.current !== undefined) window.clearTimeout(feedbackTimer.current);
+  }, []);
+
+  const reset = () => {
+    if (feedbackTimer.current !== undefined) window.clearTimeout(feedbackTimer.current);
+    setMatches({});
+    setSelectedPart(null);
+    setDraggedPart(null);
+    setFeedback(null);
+    setMessage("New round. Match each flower part to its function.");
+  };
+
+  return (
+    <div className="function-match-game">
+      <div className="match-game-topline">
+        <div><span className="match-kicker">Structure → function</span><p className="match-instruction">Drag each part onto its job, or tap a part and then a target. Match all ten.</p></div>
+        <div className="match-score" aria-label={`${matchedCount} of ten matches correct`}><strong>{matchedCount}</strong><span>/ 10 matched</span></div>
+      </div>
+      <div className="match-board">
+        <section className="match-bank" aria-label="Draggable flower parts">
+          <h3><span>Flower parts</span><small>Drag or select</small></h3>
+          <div className="draggable-grid">
+            {flowerParts.map((part) => {
+              const isMatched = matchedParts.includes(part.id);
+              return <button key={part.id} type="button" className={`drag-part ${isMatched ? "matched" : ""} ${selectedPart === part.id ? "selected" : ""}`} disabled={isMatched} aria-pressed={selectedPart === part.id} draggable={false} onClick={() => setSelectedPart((current) => current === part.id ? null : part.id)} onPointerDown={(event) => { if (event.button !== 0 || isMatched) return; setDraggedPart(part.id); setPointer({ x: event.clientX, y: event.clientY }); }}>
+                <span className="drag-grip" aria-hidden="true">⠿</span><span><strong>{part.name}</strong><small>{part.group}</small></span>{isMatched && <Check size={17} aria-hidden="true" />}
+              </button>;
+            })}
+          </div>
+        </section>
+        <section className="match-targets" aria-label="Function drop targets">
+          <h3><span>What does it do?</span><small>Drop zone</small></h3>
+          <div className="drop-target-grid">
+            {[...flowerParts].reverse().map((target) => {
+              const matchedPart = matches[target.id] ? flowerParts.find((part) => part.id === matches[target.id]) : undefined;
+              const isFeedbackTarget = feedback?.targetId === target.id;
+              return <button key={target.id} type="button" data-function-target={target.id} className={`drop-zone ${matchedPart ? "matched" : ""} ${isFeedbackTarget ? feedback.kind : ""}`} aria-label={`${matchedPart ? `Matched with ${matchedPart.name}. ` : "Drop or select a part for this function: "}${target.function}`} onClick={() => { if (selectedPart) matchPart(selectedPart, target.id); }}>
+                <span className="drop-zone-copy">{target.function}</span>
+                <span className="drop-zone-label">{matchedPart ? <><CheckCircle2 size={15} /> {matchedPart.name}</> : "Drop a part here"}</span>
+              </button>;
+            })}
+          </div>
+        </section>
+      </div>
+      <div className={`match-live ${feedback?.kind ?? ""}`} role="status" aria-live="polite"><span className="match-live-dot" />{message}</div>
+      <div className="match-game-footer"><span>Score: <strong>{matchedCount} / {flowerParts.length}</strong></span><button type="button" className="match-reset" onClick={reset}><RotateCcw size={15} /> Reset match game</button></div>
+      {draggedPart && <div className="drag-ghost" aria-hidden="true" style={{ transform: `translate3d(${pointer.x + 14}px, ${pointer.y + 14}px, 0)` }}>{flowerParts.find((part) => part.id === draggedPart)?.name}</div>}
+    </div>
+  );
+}
+
 function StructureFunctionExplorer({ activePart, setActivePart }: { activePart: FlowerPartId; setActivePart: (part: FlowerPartId) => void }) {
   const selected = flowerParts.find((part) => part.id === activePart) ?? flowerParts[0];
   return (
     <div className="section-card-pad">
-      <div className="part-intro" style={{ marginBottom: 15 }}>The reproductive parts are grouped into a male <strong>stamen</strong> (anther + filament) and a female <strong>carpel</strong> (stigma + style + ovary). Select any card to focus its function.</div>
-      <div className="part-function-grid">
-        {flowerParts.map((part) => (
-          <button className="function-card" type="button" key={part.id} aria-pressed={activePart === part.id} onClick={() => setActivePart(part.id)}>
-            <span className="function-card-top"><strong>{part.name}</strong><small>{part.group}</small></span>
-            <p>{part.function}</p>
-          </button>
-        ))}
-      </div>
+      <div className="part-intro match-lead">The reproductive parts are grouped into a male <strong>stamen</strong> (anther + filament) and a female <strong>carpel</strong> (stigma + style + ovary). Match each structure to the job it performs.</div>
+      <FlowerFunctionMatch onMatch={setActivePart} />
       <div className="key-callout" style={{ marginTop: 14 }}><CheckCircle2 size={17} /><span><strong>{selected.name}</strong> is selected. In exam answers, name the structure and link it to its job—e.g. the filament supports the anther.</span></div>
     </div>
   );
@@ -273,7 +372,7 @@ function WindComparison() {
           <div className="compare-card-head"><h3>Insect-pollinated</h3><span>Inside the flower</span></div>
           <div className="compare-card-body">
             <div className="structure-sketch">
-              <div className="structure-photo-pair" aria-label="Close-up Word pictures of the anther and stigma">
+              <div className="structure-photo-pair" aria-label="Close-ups of the anther and stigma">
                 <img src={DOCX_MEDIA.antherCloseup} alt="Close-up of anthers inside an insect-pollinated flower" />
                 <img src={DOCX_MEDIA.stigmaCloseup} alt="Close-up of a flower's stigma and pollen-receiving surface" />
               </div>
@@ -285,7 +384,7 @@ function WindComparison() {
         <article className="compare-card">
           <div className="compare-card-head"><h3>Wind-pollinated</h3><span>Exposed to air</span></div>
           <div className="compare-card-body">
-            <div className="structure-sketch"><img className="wind-source-image" src={PPT_MEDIA.windStructures} alt="PowerPoint diagram of long, loosely hinged grass anthers and exposed feathery stigmas" /></div>
+            <div className="structure-sketch"><img className="wind-source-image" src={PPT_MEDIA.windStructures} alt="Long, loosely hinged grass anthers and exposed feathery stigmas" /></div>
             <div className="compare-fact"><strong>Anthers</strong>Loosely hinged (versatile) on long, flexible filaments; they sway and release pollen into the air.</div>
             <div className="compare-fact"><strong>Stigma</strong>Large, feathery and exposed, with a broad surface that can catch airborne pollen.</div>
           </div>
@@ -300,8 +399,8 @@ function PollenComparison() {
   return (
     <div className="section-card-pad pollen-grid">
       <figure className="pollen-figure">
-        <img src={PPT_MEDIA.pollenMicrograph} alt="PowerPoint scanning electron micrographs comparing larger textured insect-carried pollen with smaller, smoother wind-borne pollen" />
-        <figcaption>Original PowerPoint micrographs show differences in grain size and surface.</figcaption>
+        <img src={PPT_MEDIA.pollenMicrograph} alt="Scanning electron micrographs comparing larger textured insect-carried pollen with smaller, smoother wind-borne pollen" />
+        <figcaption>Compare grain size and surface: one clings, while the other travels easily in air.</figcaption>
       </figure>
       <div className="pollen-facts">
         <div className="pollen-type insect">
@@ -328,8 +427,8 @@ function PollinationDefinition() {
           <p className="definition-text"><strong>Pollination</strong> is the transfer of pollen grains from an <strong>anther</strong> to a <strong>stigma.</strong></p>
           <p className="definition-note">It describes pollen transfer. It is a different event from fertilisation, which happens later inside an ovule.</p>
         </div>
-        <div className="definition-photo-stack" role="group" aria-label="Pollination photographs from the supplied PowerPoint">
-          <img className="definition-photo" src={PPT_MEDIA.heroFlower} alt="Close-up of a pink flower from the PowerPoint" />
+        <div className="definition-photo-stack" role="group" aria-label="Flowers and a pollinator">
+          <img className="definition-photo" src={PPT_MEDIA.heroFlower} alt="Close-up of a pink flower" />
           <img className="definition-photo-inset" src={PPT_MEDIA.beeFlower} alt="Bee visiting a coneflower" />
         </div>
       </div>
@@ -402,8 +501,8 @@ function FertilisationTimeline() {
         {step < 2 ? <><div className="nucleus pollen">Pollen<br />nucleus</div><span className="fusion-plus">{step === 0 ? "→" : "+"}</span><div className="nucleus egg">Ovule<br />nucleus</div></> : <div className="nucleus fused">Fused<br />nuclei · zygote</div>}
       </div>
       <figure className="fertilisation-reference">
-        <img src={PPT_MEDIA.fertilisation} alt="PowerPoint ovule diagram showing the pollen nucleus meeting the female nucleus inside an ovule" />
-        <figcaption>The PowerPoint ovule diagram shows where the nuclei meet and fuse.</figcaption>
+        <img src={PPT_MEDIA.fertilisation} alt="Ovule diagram showing the pollen nucleus meeting the female nucleus inside an ovule" />
+        <figcaption>The pollen nucleus reaches and fuses with a nucleus inside the ovule.</figcaption>
       </figure>
       <div className="key-callout" style={{ marginTop: 13 }}><CheckCircle2 size={17} /><span><strong>Fertilisation is the fusion of a pollen nucleus with the nucleus in an ovule.</strong> Pollination is the earlier transfer to the stigma.</span></div>
     </div>
@@ -417,7 +516,7 @@ function AdaptationMatrix() {
   return (
     <div className="section-card-pad adaptation-layout">
       <figure className="adaptation-field-figure">
-        <img src={PPT_MEDIA.fieldContrast} alt="Flower-rich meadow plants growing beside a dense crop field, from the supplied PowerPoint" />
+        <img src={PPT_MEDIA.fieldContrast} alt="Flower-rich meadow plants growing beside a dense crop field" />
         <figcaption>Field flowers and crops show flowering plants in contrasting environments.</figcaption>
       </figure>
       <div className="adaptation-content">
@@ -475,9 +574,9 @@ function GerminationExplorer() {
           <p className="exam-note"><strong>Exam note:</strong> light and soil are not required for a seed to begin germinating. Suitable temperature depends on the species.</p>
         </div>
         <figure style={{ margin: 0 }}>
-          <div className="anatomy-art" style={{ padding: 10 }}><img src={PPT_MEDIA.germination} alt="PowerPoint experiment comparing seeds with and without water, oxygen and suitable temperature" style={{ maxHeight: 255, aspectRatio: "1.12 / 1" }} /></div>
+          <div className="anatomy-art germination-figure"><img src={PPT_MEDIA.germination} alt="Experiment comparing seeds with and without water, oxygen and suitable temperature" /></div>
           <img className="seedling-photo" src={PPT_MEDIA.seedlings} alt="Young seedlings emerging from seeds" />
-          <figcaption className="art-note">The supplied experiment isolates germination conditions; the seedlings show the result. Try removing one condition above.</figcaption>
+          <figcaption className="art-note">The experiment isolates germination conditions; the seedlings show the result. Try removing one condition above.</figcaption>
         </figure>
       </div>
     </div>
@@ -505,8 +604,8 @@ function SelfPollinationFlow() {
       </div>
       <p className="flow-fact"><strong>Self-pollination:</strong> pollen moves from an anther to the stigma of the same flower, or to a different flower on the same plant. {isSameFlower ? "The pollen returns to the stigma of its own flower." : "Both flowers belong to the same individual plant."}</p>
       <figure className="source-flow-figure anatomy-art">
-        <img src={PPT_MEDIA.selfPollination} alt="PowerPoint diagram showing self-pollination within one flower and between flowers on the same plant" />
-        <figcaption className="art-note">Both self-pollination routes are shown in the supplied PowerPoint diagram.</figcaption>
+        <img src={PPT_MEDIA.selfPollination} alt="Self-pollination within one flower and between flowers on the same plant" />
+        <figcaption className="art-note">Both routes count as self-pollination: the pollen stays on the same plant.</figcaption>
       </figure>
     </div>
   );
@@ -528,7 +627,7 @@ function CrossPollinationFlow() {
       </div>
       <p className="flow-fact"><strong>Cross-pollination:</strong> pollen moves from an anther to a flower on a <strong>different plant of the same species.</strong> The second plant boundary is the key distinction from self-pollination.</p>
       <figure className="anatomy-art" style={{ margin: "16px 0 0", padding: 10 }}>
-        <img src={PPT_MEDIA.crossPollination} alt="PowerPoint diagram showing pollen moving from one plant's anther to a flower's stigma on a different plant" style={{ maxHeight: 240 }} />
+        <img src={PPT_MEDIA.crossPollination} alt="Pollen moving from one plant's anther to a flower's stigma on a different plant" />
         <figcaption className="art-note">Cross-pollination reaches a flower on a different plant of the same species.</figcaption>
       </figure>
     </div>
@@ -575,7 +674,7 @@ function PollenTubeSequence() {
   return (
     <div className="section-card-pad tube-layout">
       <figure className="tube-figure" style={{ margin: 0 }}>
-        <img src={PPT_MEDIA.pollenTube} alt="PowerPoint diagram of a pollen grain germinating on the stigma and a tube growing through the style to the ovule's micropyle" />
+        <img src={PPT_MEDIA.pollenTube} alt="A pollen grain germinating on the stigma and a tube growing through the style to the ovule's micropyle" />
         <figcaption className="art-note">Follow the pollen tube from the stigma down the style and through the micropyle.</figcaption>
       </figure>
       <div>
