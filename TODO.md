@@ -62,3 +62,9 @@
 
 ## 21. Contemporary visual polish
 - [x] Keep a clean modern design system with generous whitespace, consistent card corner radii, smooth hover/focus transitions and a sophisticated palette, while preserving the established natural Biology identity and responsive syllabus navigation.
+
+## 22. Targeted image scale and objective-list refinements
+- [x] Make the fertilisation picture accompanying “The pollen nucleus reaches and fuses with a nucleus inside the ovule” much larger, while keeping it crisp, uncropped and responsive.
+- [x] Make the supporting pictures below the self-pollination and cross-pollination explanations smaller and subordinate to their text; preserve image aspect ratios on desktop and mobile.
+- [x] Normalize the site font so lowercase “f” and “j” render in a clear, conventional way throughout headings, body copy and controls; use a dependable sans-serif fallback and avoid custom glyph/ligature behavior that distorts them.
+- [x] Show visible bullet points for every Core and Extended/Supplement learning objective without losing the existing tier separation.

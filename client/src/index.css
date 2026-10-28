@@ -740,3 +740,73 @@ body { font-size: 1rem; line-height: 1.7; letter-spacing: normal; font-family: "
   .flower-mark { width: clamp(86px,24vw,112px); height: auto; aspect-ratio: 1.2 / 1; }
   .flower-mark img { width: 100%; height: 100%; }
 }
+
+
+/* Focused readability and figure hierarchy refinements */
+html, body, body * {
+  font-family: Arial, "Helvetica Neue", Helvetica, "Segoe UI", sans-serif !important;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  font-kerning: normal;
+  letter-spacing: normal !important;
+}
+
+.objective-panel ul {
+  list-style: disc outside;
+  padding-left: 1.35rem;
+}
+
+.fertilisation-reference {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 20px;
+  padding: clamp(16px, 3vw, 28px);
+  text-align: center;
+}
+
+.fertilisation-reference img {
+  display: block;
+  width: 100%;
+  max-width: 670px;
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.fertilisation-reference figcaption {
+  max-width: 72ch;
+  margin: 0 auto;
+  color: #607061;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.self-pollination-figure,
+.cross-pollination-figure {
+  width: min(100%, 460px);
+  margin: 16px auto 0;
+  padding: 10px 14px;
+}
+
+.self-pollination-figure img,
+.cross-pollination-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 680px) {
+  .fertilisation-reference { padding: 14px; }
+  .fertilisation-reference img { width: 100%; max-width: 100%; }
+  .self-pollination-figure,
+  .cross-pollination-figure { width: min(100%, 460px); padding: 8px; }
+}

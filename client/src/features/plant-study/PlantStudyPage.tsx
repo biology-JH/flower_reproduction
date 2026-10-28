@@ -603,7 +603,7 @@ function SelfPollinationFlow() {
         <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.stigmaCloseup} /></span><span>{isSameFlower ? "Same flower · stigma" : "Flower 2 · stigma"}</span></div>
       </div>
       <p className="flow-fact"><strong>Self-pollination:</strong> pollen moves from an anther to the stigma of the same flower, or to a different flower on the same plant. {isSameFlower ? "The pollen returns to the stigma of its own flower." : "Both flowers belong to the same individual plant."}</p>
-      <figure className="source-flow-figure anatomy-art">
+      <figure className="source-flow-figure anatomy-art self-pollination-figure">
         <img src={PPT_MEDIA.selfPollination} alt="Self-pollination within one flower and between flowers on the same plant" />
         <figcaption className="art-note">Both routes count as self-pollination: the pollen stays on the same plant.</figcaption>
       </figure>
@@ -626,7 +626,7 @@ function CrossPollinationFlow() {
         <div className="flow-node"><span className="flower-mark"><FlowerPhotoMark src={DOCX_MEDIA.crossPollination} /></span><span>Plant B · stigma receives pollen</span></div>
       </div>
       <p className="flow-fact"><strong>Cross-pollination:</strong> pollen moves from an anther to a flower on a <strong>different plant of the same species.</strong> The second plant boundary is the key distinction from self-pollination.</p>
-      <figure className="anatomy-art" style={{ margin: "16px 0 0", padding: 10 }}>
+      <figure className="anatomy-art cross-pollination-figure">
         <img src={PPT_MEDIA.crossPollination} alt="Pollen moving from one plant's anther to a flower's stigma on a different plant" />
         <figcaption className="art-note">Cross-pollination reaches a flower on a different plant of the same species.</figcaption>
       </figure>
