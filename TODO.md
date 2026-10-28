@@ -73,7 +73,7 @@
 - [x] Replace every `/manus-storage/` image URL with a same-origin static asset included under `client/public/images/`, covering every picture referenced by the page. Update the favicon to a local asset, preserve alt text and image quality, and remove the page's direct Manus-only platform-config request so the built website runs independently on Vercel.
 
 ## 24. Owner-approved GitHub transfer
-- [ ] Transfer the latest accepted website checkpoint from the Manus-managed repository to a new private GitHub repository using the official Webdev canonical-repository confirmation flow. Keep the Manus repository canonical until transfer completion succeeds; do not create a separate GitHub remote or bypass the owner's confirmation.
+- [x] Transfer the latest accepted website checkpoint from the Manus-managed repository to a new private GitHub repository using the official Webdev canonical-repository confirmation flow. Keep the Manus repository canonical until transfer completion succeeds; do not create a separate GitHub remote or bypass the owner's confirmation.
 
 ## 25. Git-connected Vercel deployment
-- [ ] Create or reuse a Vercel project linked to the confirmed GitHub repository, configure the static Vite build to run `pnpm install --frozen-lockfile` and `pnpm build:static` with output directory `dist/public`, deploy the production branch, and verify the public page, route manifest and local image assets load successfully.
+- [x] Create or reuse a Vercel project linked to the confirmed GitHub repository, configure the static Vite build to run `pnpm install --frozen-lockfile` and `pnpm build:static` with output directory `dist/public`, deploy the production branch, and verify the public page, route manifest and local image assets load successfully.
