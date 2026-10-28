@@ -68,3 +68,12 @@
 - [x] Make the supporting pictures below the self-pollination and cross-pollination explanations smaller and subordinate to their text; preserve image aspect ratios on desktop and mobile.
 - [x] Normalize the site font so lowercase “f” and “j” render in a clear, conventional way throughout headings, body copy and controls; use a dependable sans-serif fallback and avoid custom glyph/ligature behavior that distorts them.
 - [x] Show visible bullet points for every Core and Extended/Supplement learning objective without losing the existing tier separation.
+
+## 23. Portable static assets for Vercel
+- [x] Replace every `/manus-storage/` image URL with a same-origin static asset included under `client/public/images/`, covering every picture referenced by the page. Update the favicon to a local asset, preserve alt text and image quality, and remove the page's direct Manus-only platform-config request so the built website runs independently on Vercel.
+
+## 24. Owner-approved GitHub transfer
+- [ ] Transfer the latest accepted website checkpoint from the Manus-managed repository to a new private GitHub repository using the official Webdev canonical-repository confirmation flow. Keep the Manus repository canonical until transfer completion succeeds; do not create a separate GitHub remote or bypass the owner's confirmation.
+
+## 25. Git-connected Vercel deployment
+- [ ] Create or reuse a Vercel project linked to the confirmed GitHub repository, configure the static Vite build to run `pnpm install --frozen-lockfile` and `pnpm build:static` with output directory `dist/public`, deploy the production branch, and verify the public page, route manifest and local image assets load successfully.
