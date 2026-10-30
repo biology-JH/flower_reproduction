@@ -914,3 +914,80 @@ html, body, body * {
 @media (max-width: 620px) {
   .session-core-content-label { align-items: flex-start; flex-direction: column; gap: 4px; padding-top: 15px; }
 }
+
+
+/* Strict 1-to-12 syllabus progression and completion gates */
+.quick-nav-inner .course-progress-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #67756c;
+  background: transparent;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, opacity .18s ease;
+}
+.quick-nav-inner .course-progress-step:hover:not(:disabled) { border-color: #dce5d8; background: #e8ede4; color: var(--leaf); }
+.quick-nav-inner .course-progress-step:focus-visible { outline: 3px solid #84a77e; outline-offset: 2px; }
+.quick-nav-inner .course-progress-step.current { border-color: #c9d9c4; color: #2e5238; background: #eaf1e6; }
+.quick-nav-inner .course-progress-step.completed { color: #3e6846; }
+.quick-nav-inner .course-progress-step:disabled { color: #9ca59b; opacity: .72; cursor: not-allowed; }
+.course-step-number { display: grid; place-items: center; flex: 0 0 23px; width: 23px; height: 23px; border-radius: 50%; color: #5f715f; background: #e9ede5; font-size: .64rem; font-weight: 850; }
+.course-progress-step.current .course-step-number { color: #fff; background: #567a55; }
+.course-progress-step.completed .course-step-number { color: #3d6745; background: #dcebd7; }
+.course-step-label { display: inline; }
+.course-progress-step > svg { flex: 0 0 auto; }
+.course-nav-locked { padding: 6px 9px; border: 1px dashed #d5ded1; border-radius: 999px; color: #899488; font-size: .67rem; font-weight: 750; white-space: nowrap; }
+
+button.session-step-link { font-family: inherit; cursor: pointer; }
+.session-step-link:disabled { color: #98a095; opacity: .62; cursor: not-allowed; }
+.session-step-link:disabled:hover { transform: none; border-color: #dce4d8; background: rgba(255, 254, 251, .85); }
+.session-step-link:focus-visible, .session-complete-button:focus-visible { outline: 3px solid #84a77e; outline-offset: 2px; }
+.session-complete-indicator { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border: 1px solid #c8ddc4; border-radius: 999px; color: #41694a; background: #eef6eb; font-size: .68rem; font-weight: 800; }
+.session-attempt-status { margin: 12px 0 0; color: #586c5b; font-size: .78rem; line-height: 1.5; }
+.session-answer-key summary[aria-disabled="true"] { color: #778678; }
+.session-key-locked-message { margin: 10px 0; padding: 10px 12px; border: 1px solid #e6d8ba; border-radius: 11px; color: #77613a; background: #fbf5e8; font-size: .77rem; }
+.session-key-matches { display: grid; gap: 4px; margin: 6px 0 0; padding-left: 1.1rem; color: #415545; font-size: .79rem; line-height: 1.5; }
+.session-key-matches li { padding: 0; border: 0; background: transparent; }
+.session-completion-panel { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 14px; padding: 13px; border: 1px solid #cfddca; border-radius: 14px; background: #f4f8f1; }
+.session-completion-panel > p { margin: 0; color: #5d6c5f; font-size: .78rem; line-height: 1.5; }
+.session-completion-message { display: inline-flex; align-items: center; gap: 7px; color: #3c6746 !important; font-weight: 750; }
+.session-complete-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 0 0 auto; min-height: 43px; padding: 9px 14px; border: 1px solid #527a55; border-radius: 999px; color: #fff; background: #527a55; font: inherit; font-size: .78rem; font-weight: 800; text-decoration: none; cursor: pointer; transition: background .18s ease, transform .18s ease, opacity .18s ease; }
+.session-complete-button:hover:not(:disabled) { transform: translateY(-1px); background: #3f6747; }
+.session-complete-button:disabled { border-color: #a8b8a3; color: #f5f7f3; background: #9eaf99; cursor: not-allowed; opacity: .75; }
+.session-finish-links { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.session-finish-links > a:last-child { color: #47644b; font-size: .76rem; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.assessment-lock.page-wrap { display: grid; gap: 13px; width: min(1180px, calc(100% - 48px)); margin: 10px auto clamp(42px, 6vw, 76px); padding: clamp(20px, 3.5vw, 36px); border: 1px solid #dfe6dc; border-radius: 23px; background: linear-gradient(135deg, #f3f5ee, #fbf8f0); }
+.assessment-lock .eyebrow { color: #788570; }
+.assessment-lock h2 { margin: 5px 0 7px; color: #2d4434; font: 650 clamp(1.45rem, 3vw, 2.15rem)/1.15 "Fraunces", Georgia, serif; }
+.assessment-lock p { max-width: 70ch; margin: 0; color: #69766c; font-size: .86rem; line-height: 1.55; }
+.assessment-lock-copy > strong { color: #466246; font-size: .75rem; }
+.assessment-lock-progress { height: 10px; overflow: hidden; margin: 4px 0 0; border: 1px solid #d9e2d5; border-radius: 999px; background: #e6ebe2; }
+.assessment-lock-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6d9664, #d7b86b); transition: width .25s ease; }
+
+@media (max-width: 680px) {
+  .course-step-label { display: none; }
+  .course-progress-step.current .course-step-label { display: inline; }
+  .quick-nav-inner .course-progress-step { gap: 4px; min-height: 34px; padding: 4px 6px; font-size: .68rem; }
+  .course-step-number { flex-basis: 22px; width: 22px; height: 22px; }
+  .course-nav-locked { font-size: .61rem; }
+  .session-completion-panel { align-items: flex-start; flex-direction: column; }
+  .session-finish-links { align-items: flex-start; flex-direction: column; }
+  .assessment-lock.page-wrap { width: min(100% - 30px, 560px); padding: 17px; }
+}
+
+.course-step-tier { color: #879283; font-size: .52rem; font-weight: 850; letter-spacing: .045em; }
+.course-progress-step.current .course-step-tier { color: #436b48; }
+.study-session { scroll-margin-top: 138px; }
+@media (max-width: 680px) {
+  .study-session { scroll-margin-top: 118px; }
+  .course-step-tier { font-size: .48rem; }
+}

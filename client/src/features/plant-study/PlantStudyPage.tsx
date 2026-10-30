@@ -27,9 +27,32 @@ import {
   type TierFilter,
 } from "./data";
 import { LearningObjectives, Plenary, Starter } from "./LessonBookends";
-import { COURSE_SESSIONS, getSessionNavigationLabel, getVisibleCourseSessions, StudySessionFrame } from "./StudySessions";
+import { COURSE_SESSIONS } from "./sessionData";
+import { CourseProgressNav, StudySessionFrame } from "./StudySessions";
 
 const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v2";
+const COURSE_PROGRESS_KEY = "fieldnotes-plant-reproduction-sequential-course-v1";
+
+function readSavedCompletedPoints(): number[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const parsed: unknown = JSON.parse(window.sessionStorage.getItem(COURSE_PROGRESS_KEY) ?? "[]");
+    if (!Array.isArray(parsed)) return [];
+    const saved = new Set<number>(parsed.filter((point): point is number => Number.isInteger(point) && point >= 1 && point <= 12));
+    const completed: number[] = [];
+    for (let point = 1; point <= 12; point += 1) {
+      if (!saved.has(point)) break;
+      completed.push(point);
+    }
+    return completed;
+  } catch {
+    return [];
+  }
+}
+
+function getFirstIncompletePoint(completed: number[]): number {
+  return Math.min(COURSE_SESSIONS.length, completed.length + 1);
+}
 
 const DOCX_MEDIA = {
   header: "/images/docx-header.png",
@@ -124,10 +147,10 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
               <span className="wordmark-sub">Biology · 16.3</span>
             </span>
           </a>
-          <div className="tier-toggle" role="group" aria-label="Filter syllabus material by Core or Extended tier">
-            <button type="button" aria-pressed={filter === "all"} onClick={() => onFilter("all")}>All</button>
-            <button type="button" aria-pressed={filter === "core"} onClick={() => onFilter("core")}>Core</button>
-            <button type="button" aria-pressed={filter === "supplement"} onClick={() => onFilter("supplement")}>Extended</button>
+          <div className="tier-toggle" role="group" aria-label="Choose the tier focus for the final quiz; course points remain in order">
+            <button type="button" aria-pressed={filter === "all"} onClick={() => onFilter("all")}>All quiz</button>
+            <button type="button" aria-pressed={filter === "core"} onClick={() => onFilter("core")}>Core quiz</button>
+            <button type="button" aria-pressed={filter === "supplement"} onClick={() => onFilter("supplement")}>Extended quiz</button>
           </div>
         </div>
       </header>
@@ -135,39 +158,23 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
   );
 }
 
-function SectionNav({ filter }: { filter: TierFilter }) {
-  const shown = syllabusSections.filter((item) => filter === "all" || item.tier.toLowerCase() === filter);
-  const sessions = getVisibleCourseSessions(filter);
+function SectionNav({ activePoint, completedPoints, courseComplete, onSelectPoint }: {
+  activePoint: number;
+  completedPoints: number[];
+  courseComplete: boolean;
+  onSelectPoint: (point: number) => void;
+}) {
   return (
-    <nav className="quick-nav" aria-label="Lesson sections">
-      <div className="quick-nav-inner">
-        <span className="nav-tier">SESSIONS</span>
-        {sessions.map((session) => (
-          <a key={session.id} href={`#${session.id}`} title={`Session ${session.number}: ${session.title}`}>
-            {String(session.number).padStart(2, "0")} · {getSessionNavigationLabel(session, filter)}
-          </a>
-        ))}
-        <span className="nav-tier">LESSON</span>
-        <a href="#starter">Starter</a>
-        <a href="#learning-objectives">Objectives</a>
-        {shown.map((item, index) => (
-          <span key={item.id} style={{ display: "contents" }}>
-            {(index === 0 || item.tier !== shown[index - 1]?.tier) && (
-              <span className="nav-tier">{item.tier === "CORE" ? "CORE" : "EXTENDED"}</span>
-            )}
-            <a href={`#${item.id}`} title={`Point ${item.point}: ${item.label}`}>
-              {String(item.point).padStart(2, "0")} · {item.label}
-            </a>
-          </span>
-        ))}
-        <a href="#self-assessment">Quiz ↗</a>
-        <a href="#plenary">Plenary</a>
-      </div>
-    </nav>
+    <CourseProgressNav
+      activePoint={activePoint}
+      completedPoints={completedPoints}
+      courseComplete={courseComplete}
+      onSelectPoint={onSelectPoint}
+    />
   );
 }
 
-function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
+function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-image-wrap">
@@ -176,10 +183,10 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
         <div className="hero-copy">
           <div className="eyebrow">IGCSE Biology · Topic 16.3</div>
           <h1 className="hero-title">A flower’s<br />next <em>chapter.</em></h1>
-          <p className="hero-lede">Follow five guided sessions from flower anatomy through pollen, fertilisation and germination. Each session sets clear WHAT, WHY and HOW goals, then lets you test yourself before revealing explanations.</p>
+          <p className="hero-lede">Follow all twelve syllabus points in exact order. Complete each point’s three-question check and review its explanations before the next point unlocks.</p>
           <div className="hero-actions">
             <a className="button-primary" href="#starter">Start the warm-up <ArrowRight size={16} /></a>
-            <button className="button-secondary" type="button" onClick={() => { onFilter("supplement"); document.getElementById("supplement-09")?.scrollIntoView({ behavior: "smooth" }); }}>Go to Extended <Sprout size={15} /></button>
+            <button className="button-secondary" type="button" onClick={() => document.getElementById("current-point")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Follow points 1–12 <Sprout size={15} /></button>
           </div>
         </div>
         <div className="image-caption">
@@ -191,7 +198,7 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
         <div className="hero-stats" aria-label="Lesson overview">
           <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
           <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
-          <div className="hero-stat"><BookOpen size={17} /><span><strong>5</strong> learning sessions</span></div>
+          <div className="hero-stat"><BookOpen size={17} /><span><strong>12</strong> ordered points</span></div>
           <div className="hero-stat"><BookOpen size={17} /><span><strong>24</strong> quiz questions</span></div>
         </div>
         <div className="hero-photo-strip" aria-label="Pollination examples">
@@ -204,15 +211,15 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
 }
 
 function LessonIntro({ filter }: { filter: TierFilter }) {
-  const text = filter === "core"
-    ? <>Showing <strong>Core points 1–8.</strong> These form the shared foundation of the topic.</>
+  const quizFocus = filter === "core"
+    ? <>The final assessment is focused on <strong>Core questions.</strong></>
     : filter === "supplement"
-      ? <>Showing <strong>Extended / Supplement points 9–12.</strong> Start here when you are ready to extend the story.</>
-      : <>Move between <strong>Core (1–8)</strong> and <strong>Extended / Supplement (9–12)</strong> using the filter above. Every point badge marks its exam tier.</>;
+      ? <>The final assessment is focused on <strong>Extended / Supplement questions.</strong></>
+      : <>The final assessment includes <strong>all tiers.</strong></>;
   return (
     <div className="intro-band">
       <div className="page-wrap intro-band-inner">
-        <p>{text}</p>
+        <p>The learning path always covers <strong>syllabus points 1 → 12 in order.</strong> {quizFocus} Badges mark Core (1–8) and Extended / Supplement (9–12).</p>
         <div className="intro-key"><Badge tier="CORE" /><Badge tier="SUPPLEMENT" /></div>
       </div>
     </div>
@@ -789,7 +796,7 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
 function renderSyllabusPoint(point: number, activePart: FlowerPartId, setActivePart: (part: FlowerPartId) => void) {
   switch (point) {
     case 1:
-      return <SectionFrame key="core-01" id="core-01" point={1} tier="CORE" title="A flower, opened up" description="Meet the parts of an insect-pollinated flower—and see how the same plan contrasts with a wind-pollinated grass."><AnatomyExplorer activePart={activePart} setActivePart={setActivePart} /></SectionFrame>;
+      return <SectionFrame key="core-01" id="core-01" point={1} tier="CORE" title="A flower, opened up" description="Meet and label the structures of an insect-pollinated flower. Their functions follow in syllabus point 2."><AnatomyExplorer activePart={activePart} setActivePart={setActivePart} /></SectionFrame>;
     case 2:
       return <SectionFrame key="core-02" id="core-02" point={2} tier="CORE" title="Every part has a purpose" description="Explore what each structure does. A precise structure–function link is the beginning of a strong biology answer."><StructureFunctionExplorer activePart={activePart} setActivePart={setActivePart} /></SectionFrame>;
     case 3:
@@ -797,7 +804,7 @@ function renderSyllabusPoint(point: number, activePart: FlowerPartId, setActiveP
     case 4:
       return <SectionFrame key="core-04" id="core-04" point={4} tier="CORE" title="Two grains, two journeys" description="Pollen shape matches its route: cling to an insect, or drift through air."><PollenComparison /></SectionFrame>;
     case 5:
-      return <SectionFrame key="core-05" id="core-05" point={5} tier="CORE" title="Pollination: the transfer" description="One short definition draws a clear line between moving pollen and joining nuclei."><PollinationDefinition /></SectionFrame>;
+      return <SectionFrame key="core-05" id="core-05" point={5} tier="CORE" title="Pollination: the transfer" description="Define pollination precisely by naming the source of pollen and its destination."><PollinationDefinition /></SectionFrame>;
     case 6:
       return <SectionFrame key="core-06" id="core-06" point={6} tier="CORE" title="Fertilisation: the fusion" description="A pollen nucleus and a nucleus inside an ovule unite. Step through the event and watch the two become one."><FertilisationTimeline /></SectionFrame>;
     case 7:
@@ -820,35 +827,84 @@ function renderSyllabusPoint(point: number, activePart: FlowerPartId, setActiveP
 export default function PlantStudyPage() {
   const [filter, setFilter] = useState<TierFilter>("all");
   const [activePart, setActivePart] = useState<FlowerPartId>("stigma");
-  const showCore = filter !== "supplement";
-  const showSupplement = filter !== "core";
-  const visibleSessions = getVisibleCourseSessions(filter);
-  const isPointVisible = (point: number) => point <= 8 ? showCore : showSupplement;
+  const [completedPoints, setCompletedPoints] = useState<number[]>(() => readSavedCompletedPoints());
+  const [activePoint, setActivePoint] = useState<number>(() => getFirstIncompletePoint(readSavedCompletedPoints()));
+  const [scrollToActivePoint, setScrollToActivePoint] = useState(false);
+  const courseComplete = completedPoints.length === COURSE_SESSIONS.length;
+  const activeSession = COURSE_SESSIONS[activePoint - 1];
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(COURSE_PROGRESS_KEY, JSON.stringify(completedPoints));
+    } catch {
+      // The course still works when browser storage is unavailable; progress then lasts only in memory.
+    }
+  }, [completedPoints]);
+
+  useEffect(() => {
+    if (!scrollToActivePoint) return;
+    document.getElementById("current-point")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setScrollToActivePoint(false);
+  }, [scrollToActivePoint]);
+
+  const navigateToPoint = (point: number) => {
+    if (point === activePoint) return;
+    setActivePoint(point);
+    setScrollToActivePoint(true);
+  };
+  const handleSelectPoint = (point: number) => {
+    if (point <= Math.min(COURSE_SESSIONS.length, completedPoints.length + 1)) navigateToPoint(point);
+  };
+  const handleCompletePoint = () => {
+    if (activePoint !== completedPoints.length + 1) return;
+    setCompletedPoints((current) => current.includes(activePoint) ? current : [...current, activePoint]);
+  };
+  const handlePreviousPoint = () => navigateToPoint(Math.max(1, activePoint - 1));
+  const handleNextPoint = () => {
+    if (completedPoints.includes(activePoint) && activePoint < COURSE_SESSIONS.length) navigateToPoint(activePoint + 1);
+  };
+
   return (
     <div id="main-content">
       <SiteHeader filter={filter} onFilter={setFilter} />
-      <SectionNav filter={filter} />
+      <SectionNav activePoint={activePoint} completedPoints={completedPoints} courseComplete={courseComplete} onSelectPoint={handleSelectPoint} />
       <main>
-        <Hero onFilter={setFilter} />
+        <Hero />
         <Starter />
         <LearningObjectives />
         <LessonIntro filter={filter} />
         <div className="page-wrap section-stack">
-          {visibleSessions.map((session, index) => (
-            <StudySessionFrame
-              key={session.id}
-              session={session}
-              filter={filter}
-              totalSessions={COURSE_SESSIONS.length}
-              previous={visibleSessions[index - 1]}
-              next={visibleSessions[index + 1]}
-            >
-              {session.points.filter(isPointVisible).map((point) => renderSyllabusPoint(point, activePart, setActivePart))}
-            </StudySessionFrame>
-          ))}
+          <StudySessionFrame
+            key={activeSession.id}
+            session={activeSession}
+            totalPoints={COURSE_SESSIONS.length}
+            completedPoints={completedPoints}
+            courseComplete={courseComplete}
+            onComplete={handleCompletePoint}
+            onPrevious={handlePreviousPoint}
+            onNext={handleNextPoint}
+          >
+            {renderSyllabusPoint(activePoint, activePart, setActivePart)}
+          </StudySessionFrame>
         </div>
-        <QuizDashboard filter={filter} />
-        <Plenary />
+        {courseComplete ? (
+          <>
+            <QuizDashboard filter={filter} />
+            <Plenary />
+          </>
+        ) : (
+          <section className="page-wrap assessment-lock" role="status" aria-labelledby="assessment-lock-title">
+            <div className="assessment-lock-copy">
+              <div className="eyebrow">Final review · locked</div>
+              <h2 id="assessment-lock-title">Complete all twelve points in order</h2>
+              <p>The 24-question self-assessment and Plenary unlock after syllabus point 12. Progress is saved for this browser session.</p>
+              <div className="assessment-lock-progress" role="progressbar" aria-label="Syllabus points completed" aria-valuemin={0} aria-valuemax={COURSE_SESSIONS.length} aria-valuenow={completedPoints.length}>
+                <span style={{ width: `${(completedPoints.length / COURSE_SESSIONS.length) * 100}%` }} />
+              </div>
+              <strong>{completedPoints.length} of {COURSE_SESSIONS.length} points complete</strong>
+            </div>
+          </section>
+        )}
       </main>
       <footer className="footer">
         <div className="page-wrap footer-inner"><span className="footer-brand"><span className="footer-mark" aria-hidden="true"><Flower2 size={17} /></span> Fieldnotes · IGCSE Biology</span><span>Topic 16.3 · Core 1–8 · Extended / Supplement 9–12</span><span>Built for curious minds and careful answers.</span></div>
