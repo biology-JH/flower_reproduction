@@ -77,3 +77,8 @@
 
 ## 25. Git-connected Vercel deployment
 - [x] Create or reuse a Vercel project linked to the confirmed GitHub repository, configure the static Vite build to run `pnpm install --frozen-lockfile` and `pnpm build:static` with output directory `dist/public`, deploy the production branch, and verify the public page, route manifest and local image assets load successfully.
+
+## 26. Five-session Plant Reproduction course structure
+- [x] Organize the existing syllabus content into five sequential sessions: (1) Flower anatomy and functions — Core points 1–2; (2) Pollination and flower adaptations — Core points 3–5 and 7; (3) Fertilisation and pollen-tube growth — Core point 6 and Extended/Supplement point 12; (4) Seed germination — Core point 8; (5) Self-pollination, cross-pollination and population impact — Extended/Supplement points 9–11. Preserve all syllabus point numbers, tier badges, supplied imagery and existing interactive diagrams, matching activity and assessment.
+- [x] At the beginning of every session, clearly state the session learning objectives in WHAT (the concept/skill to master), WHY (its real-world relevance/value), and HOW (the exact steps or methods to learn it). Follow these objectives with accessible, concise core content.
+- [x] Include four varied self-check questions in each session, mixing multiple-choice questions with plausible distractors, contextual fill-in-the-blank questions, and matching key terms to definitions/scenarios. Put an “Answer Key & Explanations” section at the absolute bottom of each session, hidden until the learner chooses to reveal it so they can attempt the check first.

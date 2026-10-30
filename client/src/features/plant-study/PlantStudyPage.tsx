@@ -27,6 +27,7 @@ import {
   type TierFilter,
 } from "./data";
 import { LearningObjectives, Plenary, Starter } from "./LessonBookends";
+import { COURSE_SESSIONS, getSessionNavigationLabel, getVisibleCourseSessions, StudySessionFrame } from "./StudySessions";
 
 const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v2";
 
@@ -136,9 +137,17 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
 
 function SectionNav({ filter }: { filter: TierFilter }) {
   const shown = syllabusSections.filter((item) => filter === "all" || item.tier.toLowerCase() === filter);
+  const sessions = getVisibleCourseSessions(filter);
   return (
     <nav className="quick-nav" aria-label="Lesson sections">
       <div className="quick-nav-inner">
+        <span className="nav-tier">SESSIONS</span>
+        {sessions.map((session) => (
+          <a key={session.id} href={`#${session.id}`} title={`Session ${session.number}: ${session.title}`}>
+            {String(session.number).padStart(2, "0")} · {getSessionNavigationLabel(session, filter)}
+          </a>
+        ))}
+        <span className="nav-tier">LESSON</span>
         <a href="#starter">Starter</a>
         <a href="#learning-objectives">Objectives</a>
         {shown.map((item, index) => (
@@ -167,7 +176,7 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
         <div className="hero-copy">
           <div className="eyebrow">IGCSE Biology · Topic 16.3</div>
           <h1 className="hero-title">A flower’s<br />next <em>chapter.</em></h1>
-          <p className="hero-lede">Follow the journey from flower parts to pollen, fertilisation and a seed ready to grow. A visual, exam-focused field guide—one syllabus point at a time.</p>
+          <p className="hero-lede">Follow five guided sessions from flower anatomy through pollen, fertilisation and germination. Each session sets clear WHAT, WHY and HOW goals, then lets you test yourself before revealing explanations.</p>
           <div className="hero-actions">
             <a className="button-primary" href="#starter">Start the warm-up <ArrowRight size={16} /></a>
             <button className="button-secondary" type="button" onClick={() => { onFilter("supplement"); document.getElementById("supplement-09")?.scrollIntoView({ behavior: "smooth" }); }}>Go to Extended <Sprout size={15} /></button>
@@ -182,6 +191,7 @@ function Hero({ onFilter }: { onFilter: (value: TierFilter) => void }) {
         <div className="hero-stats" aria-label="Lesson overview">
           <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
           <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
+          <div className="hero-stat"><BookOpen size={17} /><span><strong>5</strong> learning sessions</span></div>
           <div className="hero-stat"><BookOpen size={17} /><span><strong>24</strong> quiz questions</span></div>
         </div>
         <div className="hero-photo-strip" aria-label="Pollination examples">
@@ -776,11 +786,44 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
   );
 }
 
+function renderSyllabusPoint(point: number, activePart: FlowerPartId, setActivePart: (part: FlowerPartId) => void) {
+  switch (point) {
+    case 1:
+      return <SectionFrame key="core-01" id="core-01" point={1} tier="CORE" title="A flower, opened up" description="Meet the parts of an insect-pollinated flower—and see how the same plan contrasts with a wind-pollinated grass."><AnatomyExplorer activePart={activePart} setActivePart={setActivePart} /></SectionFrame>;
+    case 2:
+      return <SectionFrame key="core-02" id="core-02" point={2} tier="CORE" title="Every part has a purpose" description="Explore what each structure does. A precise structure–function link is the beginning of a strong biology answer."><StructureFunctionExplorer activePart={activePart} setActivePart={setActivePart} /></SectionFrame>;
+    case 3:
+      return <SectionFrame key="core-03" id="core-03" point={3} tier="CORE" title="Built for the breeze" description="Wind-pollinated flowers expose their pollen-releasing and pollen-catching parts to moving air."><WindComparison /></SectionFrame>;
+    case 4:
+      return <SectionFrame key="core-04" id="core-04" point={4} tier="CORE" title="Two grains, two journeys" description="Pollen shape matches its route: cling to an insect, or drift through air."><PollenComparison /></SectionFrame>;
+    case 5:
+      return <SectionFrame key="core-05" id="core-05" point={5} tier="CORE" title="Pollination: the transfer" description="One short definition draws a clear line between moving pollen and joining nuclei."><PollinationDefinition /></SectionFrame>;
+    case 6:
+      return <SectionFrame key="core-06" id="core-06" point={6} tier="CORE" title="Fertilisation: the fusion" description="A pollen nucleus and a nucleus inside an ovule unite. Step through the event and watch the two become one."><FertilisationTimeline /></SectionFrame>;
+    case 7:
+      return <SectionFrame key="core-07" id="core-07" point={7} tier="CORE" title="Adaptations at a glance" description="Filter or sort the flower traits. Each difference helps explain how pollen is transferred."><AdaptationMatrix /></SectionFrame>;
+    case 8:
+      return <SectionFrame key="core-08" id="core-08" point={8} tier="CORE" title="A seed’s wake-up call" description="Try changing the conditions. A seed needs the right combination before germination can begin."><GerminationExplorer /></SectionFrame>;
+    case 9:
+      return <SectionFrame key="supplement-09" id="supplement-09" point={9} tier="SUPPLEMENT" title="Self-pollination stays close" description="The pollen recipient can be the very same flower, or another flower on that same plant."><SelfPollinationFlow /></SectionFrame>;
+    case 10:
+      return <SectionFrame key="supplement-10" id="supplement-10" point={10} tier="SUPPLEMENT" title="Cross-pollination crosses plants" description="The receiving flower must be on a different plant of the same species—not simply the next flower along."><CrossPollinationFlow /></SectionFrame>;
+    case 11:
+      return <SectionFrame key="supplement-11" id="supplement-11" point={11} tier="SUPPLEMENT" title="A population-level trade-off" description="Compare variation, possible resilience and reliance on pollen vectors—without treating either strategy as a guarantee."><PopulationImpact /></SectionFrame>;
+    case 12:
+      return <SectionFrame key="supplement-12" id="supplement-12" point={12} tier="SUPPLEMENT" title="The pollen tube’s route" description="Follow compatible pollen from the stigma, down the style, and through the micropyle into an ovule."><PollenTubeSequence /></SectionFrame>;
+    default:
+      return null;
+  }
+}
+
 export default function PlantStudyPage() {
   const [filter, setFilter] = useState<TierFilter>("all");
   const [activePart, setActivePart] = useState<FlowerPartId>("stigma");
   const showCore = filter !== "supplement";
   const showSupplement = filter !== "core";
+  const visibleSessions = getVisibleCourseSessions(filter);
+  const isPointVisible = (point: number) => point <= 8 ? showCore : showSupplement;
   return (
     <div id="main-content">
       <SiteHeader filter={filter} onFilter={setFilter} />
@@ -791,47 +834,18 @@ export default function PlantStudyPage() {
         <LearningObjectives />
         <LessonIntro filter={filter} />
         <div className="page-wrap section-stack">
-          {showCore && <>
-            <SectionFrame id="core-01" point={1} tier="CORE" title="A flower, opened up" description="Meet the parts of an insect-pollinated flower—and see how the same plan contrasts with a wind-pollinated grass.">
-              <AnatomyExplorer activePart={activePart} setActivePart={setActivePart} />
-            </SectionFrame>
-            <SectionFrame id="core-02" point={2} tier="CORE" title="Every part has a purpose" description="Explore what each structure does. A precise structure–function link is the beginning of a strong biology answer.">
-              <StructureFunctionExplorer activePart={activePart} setActivePart={setActivePart} />
-            </SectionFrame>
-            <SectionFrame id="core-03" point={3} tier="CORE" title="Built for the breeze" description="Wind-pollinated flowers expose their pollen-releasing and pollen-catching parts to moving air.">
-              <WindComparison />
-            </SectionFrame>
-            <SectionFrame id="core-04" point={4} tier="CORE" title="Two grains, two journeys" description="Pollen shape matches its route: cling to an insect, or drift through air.">
-              <PollenComparison />
-            </SectionFrame>
-            <SectionFrame id="core-05" point={5} tier="CORE" title="Pollination: the transfer" description="One short definition draws a clear line between moving pollen and joining nuclei.">
-              <PollinationDefinition />
-            </SectionFrame>
-            <SectionFrame id="core-06" point={6} tier="CORE" title="Fertilisation: the fusion" description="A pollen nucleus and a nucleus inside an ovule unite. Step through the event and watch the two become one.">
-              <FertilisationTimeline />
-            </SectionFrame>
-            <SectionFrame id="core-07" point={7} tier="CORE" title="Adaptations at a glance" description="Filter or sort the flower traits. Each difference helps explain how pollen is transferred.">
-              <AdaptationMatrix />
-            </SectionFrame>
-            <SectionFrame id="core-08" point={8} tier="CORE" title="A seed’s wake-up call" description="Try changing the conditions. A seed needs the right combination before germination can begin.">
-              <GerminationExplorer />
-            </SectionFrame>
-          </>}
-          {showSupplement && <>
-            <div className="intro-band" style={{ padding: "32px 0 0" }}><div className="intro-band-inner"><p><strong>Supplement / Extended · points 9–12</strong> — continue from pollen transfer into inheritance, populations and the pollen tube’s route.</p><div className="intro-key"><Badge tier="SUPPLEMENT" /></div></div></div>
-            <SectionFrame id="supplement-09" point={9} tier="SUPPLEMENT" title="Self-pollination stays close" description="The pollen recipient can be the very same flower, or another flower on that same plant.">
-              <SelfPollinationFlow />
-            </SectionFrame>
-            <SectionFrame id="supplement-10" point={10} tier="SUPPLEMENT" title="Cross-pollination crosses plants" description="The receiving flower must be on a different plant of the same species—not simply the next flower along.">
-              <CrossPollinationFlow />
-            </SectionFrame>
-            <SectionFrame id="supplement-11" point={11} tier="SUPPLEMENT" title="A population-level trade-off" description="Compare variation, possible resilience and reliance on pollen vectors—without treating either strategy as a guarantee.">
-              <PopulationImpact />
-            </SectionFrame>
-            <SectionFrame id="supplement-12" point={12} tier="SUPPLEMENT" title="The pollen tube’s route" description="Follow compatible pollen from the stigma, down the style, and through the micropyle into an ovule.">
-              <PollenTubeSequence />
-            </SectionFrame>
-          </>}
+          {visibleSessions.map((session, index) => (
+            <StudySessionFrame
+              key={session.id}
+              session={session}
+              filter={filter}
+              totalSessions={COURSE_SESSIONS.length}
+              previous={visibleSessions[index - 1]}
+              next={visibleSessions[index + 1]}
+            >
+              {session.points.filter(isPointVisible).map((point) => renderSyllabusPoint(point, activePart, setActivePart))}
+            </StudySessionFrame>
+          ))}
         </div>
         <QuizDashboard filter={filter} />
         <Plenary />
