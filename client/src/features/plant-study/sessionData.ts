@@ -14,6 +14,7 @@ export type FillCheck = {
   kind: "fill-in-the-blank";
   prompt: string;
   answer: string;
+  acceptedAnswers?: string[];
   explanation: string;
 };
 
@@ -50,7 +51,7 @@ export const COURSE_SESSIONS: CourseSession[] = [
     number: 1,
     title: "Flower anatomy",
     shortTitle: "Flower anatomy",
-    summary: "Explore the structures of an insect-pollinated flower before moving to their jobs in point 2.",
+    summary: "Explore the structures of an insect-pollinated flower. Point 2 explores their jobs; you can jump there whenever you choose.",
     syllabus: "Syllabus point 1 · Core",
     tier: "CORE",
     objectives: {
@@ -95,7 +96,7 @@ export const COURSE_SESSIONS: CourseSession[] = [
     number: 2,
     title: "Flower structure functions",
     shortTitle: "Structure functions",
-    summary: "Now connect each structure from point 1 with its precise function.",
+    summary: "Connect each flower structure with its precise function. Visit point 1 any time to review the labelled anatomy.",
     syllabus: "Syllabus point 2 · Core",
     tier: "CORE",
     objectives: {

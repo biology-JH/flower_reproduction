@@ -28,30 +28,39 @@ import {
 } from "./data";
 import { LearningObjectives, Plenary, Starter } from "./LessonBookends";
 import { COURSE_SESSIONS } from "./sessionData";
+import { shuffleIndexedChoices } from "./questionUtils";
 import { CourseProgressNav, StudySessionFrame } from "./StudySessions";
 
 const ANSWERS_KEY = "fieldnotes-plant-reproduction-quiz-v2";
 const COURSE_PROGRESS_KEY = "fieldnotes-plant-reproduction-sequential-course-v1";
+const COURSE_ACTIVE_POINT_KEY = "fieldnotes-plant-reproduction-active-point-v1";
 
 function readSavedCompletedPoints(): number[] {
   if (typeof window === "undefined") return [];
   try {
     const parsed: unknown = JSON.parse(window.sessionStorage.getItem(COURSE_PROGRESS_KEY) ?? "[]");
     if (!Array.isArray(parsed)) return [];
-    const saved = new Set<number>(parsed.filter((point): point is number => Number.isInteger(point) && point >= 1 && point <= 12));
-    const completed: number[] = [];
-    for (let point = 1; point <= 12; point += 1) {
-      if (!saved.has(point)) break;
-      completed.push(point);
-    }
-    return completed;
+    return [...new Set<number>(parsed.filter((point): point is number =>
+      typeof point === "number" && Number.isInteger(point) && point >= 1 && point <= COURSE_SESSIONS.length,
+    ))].sort((left, right) => left - right);
   } catch {
     return [];
   }
 }
 
 function getFirstIncompletePoint(completed: number[]): number {
-  return Math.min(COURSE_SESSIONS.length, completed.length + 1);
+  return COURSE_SESSIONS.find((session) => !completed.includes(session.number))?.number ?? 1;
+}
+
+function readSavedActivePoint(): number {
+  if (typeof window === "undefined") return 1;
+  try {
+    const saved = Number(window.sessionStorage.getItem(COURSE_ACTIVE_POINT_KEY));
+    if (Number.isInteger(saved) && saved >= 1 && saved <= COURSE_SESSIONS.length) return saved;
+  } catch {
+    return getFirstIncompletePoint(readSavedCompletedPoints());
+  }
+  return getFirstIncompletePoint(readSavedCompletedPoints());
 }
 
 const DOCX_MEDIA = {
@@ -147,7 +156,7 @@ function SiteHeader({ filter, onFilter }: { filter: TierFilter; onFilter: (value
               <span className="wordmark-sub">Biology · 16.3</span>
             </span>
           </a>
-          <div className="tier-toggle" role="group" aria-label="Choose the tier focus for the final quiz; course points remain in order">
+          <div className="tier-toggle" role="group" aria-label="Choose the tier focus for the final quiz; all course points remain available">
             <button type="button" aria-pressed={filter === "all"} onClick={() => onFilter("all")}>All quiz</button>
             <button type="button" aria-pressed={filter === "core"} onClick={() => onFilter("core")}>Core quiz</button>
             <button type="button" aria-pressed={filter === "supplement"} onClick={() => onFilter("supplement")}>Extended quiz</button>
@@ -183,10 +192,10 @@ function Hero() {
         <div className="hero-copy">
           <div className="eyebrow">IGCSE Biology · Topic 16.3</div>
           <h1 className="hero-title">A flower’s<br />next <em>chapter.</em></h1>
-          <p className="hero-lede">Follow all twelve syllabus points in exact order. Complete each point’s three-question check and review its explanations before the next point unlocks.</p>
+          <p className="hero-lede">Choose any of the twelve syllabus points from the menu. Get instant feedback as you practise, and return to any point whenever you like.</p>
           <div className="hero-actions">
             <a className="button-primary" href="#starter">Start the warm-up <ArrowRight size={16} /></a>
-            <button className="button-secondary" type="button" onClick={() => document.getElementById("current-point")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Follow points 1–12 <Sprout size={15} /></button>
+            <a className="button-secondary" href="#course-sequence">Choose a syllabus point <Sprout size={15} /></a>
           </div>
         </div>
         <div className="image-caption">
@@ -198,7 +207,7 @@ function Hero() {
         <div className="hero-stats" aria-label="Lesson overview">
           <div className="hero-stat"><span className="hero-stat-dot" /><span><strong>8</strong> Core points</span></div>
           <div className="hero-stat"><span className="hero-stat-dot" style={{ background: "#78946f" }} /><span><strong>4</strong> Extended points</span></div>
-          <div className="hero-stat"><BookOpen size={17} /><span><strong>12</strong> ordered points</span></div>
+          <div className="hero-stat"><BookOpen size={17} /><span><strong>12</strong> open points</span></div>
           <div className="hero-stat"><BookOpen size={17} /><span><strong>24</strong> quiz questions</span></div>
         </div>
         <div className="hero-photo-strip" aria-label="Pollination examples">
@@ -219,7 +228,7 @@ function LessonIntro({ filter }: { filter: TierFilter }) {
   return (
     <div className="intro-band">
       <div className="page-wrap intro-band-inner">
-        <p>The learning path always covers <strong>syllabus points 1 → 12 in order.</strong> {quizFocus} Badges mark Core (1–8) and Extended / Supplement (9–12).</p>
+        <p>All twelve points stay available: <strong>choose any session, in any order.</strong> {quizFocus} Badges mark Core (1–8) and Extended / Supplement (9–12).</p>
         <div className="intro-key"><Badge tier="CORE" /><Badge tier="SUPPLEMENT" /></div>
       </div>
     </div>
@@ -707,6 +716,7 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const visibleQuestions = useMemo(() => quizQuestions.filter((question) => filter === "all" || question.tier.toLowerCase() === filter), [filter]);
   const question = visibleQuestions[Math.min(questionIndex, Math.max(visibleQuestions.length - 1, 0))];
+  const displayChoices = useMemo(() => question ? shuffleIndexedChoices(question.choices) : [], [question?.id]);
   useEffect(() => {
     try { window.sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers)); } catch { /* Scoring still works in memory if session storage is unavailable. */ }
   }, [answers]);
@@ -745,18 +755,20 @@ function QuizDashboard({ filter }: { filter: TierFilter }) {
             {question ? <>
               <div className="quiz-meta"><Badge tier={question.tier} /><span>Point {String(question.point).padStart(2, "0")} · {question.title}</span><span>Question {questionIndex + 1} of {visibleQuestions.length}</span></div>
               <h3>{question.prompt}</h3>
-              <div className="answer-list" role="group" aria-label="Answer choices">
-                {question.choices.map((choice, index) => {
+              <div className="answer-list" role="group" aria-label="Answer choices, shuffled for this question">
+                {displayChoices.map((choice, index) => {
                   const wasAnswered = selectedAnswer !== undefined;
-                  const isCorrectChoice = wasAnswered && index === question.answer;
-                  const isWrongChoice = wasAnswered && selectedAnswer === index && index !== question.answer;
-                  return <button className={`answer-option ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "incorrect" : ""}`} key={choice} type="button" onClick={() => answerQuestion(index)} aria-pressed={selectedAnswer === index}>
-                    <span className="answer-key">{isCorrectChoice ? <Check size={14} /> : isWrongChoice ? <X size={14} /> : String.fromCharCode(65 + index)}</span><span>{choice}</span>
+                  const isCorrectChoice = wasAnswered && choice.originalIndex === question.answer;
+                  const isWrongChoice = wasAnswered && selectedAnswer === choice.originalIndex && choice.originalIndex !== question.answer;
+                  return <button className={`answer-option ${isCorrectChoice ? "correct" : ""} ${isWrongChoice ? "incorrect" : ""}`} key={choice.originalIndex} type="button" onClick={() => answerQuestion(choice.originalIndex)} aria-pressed={selectedAnswer === choice.originalIndex}>
+                    <span className="answer-key">{isCorrectChoice ? <Check size={14} /> : isWrongChoice ? <X size={14} /> : String.fromCharCode(65 + index)}</span><span>{choice.text}</span>
                   </button>;
                 })}
               </div>
-              {selectedAnswer !== undefined && <div className={`quiz-feedback ${selectedAnswer === question.answer ? "right" : "wrong"}`} role="status">
-                {selectedAnswer === question.answer ? <CheckCircle2 size={17} /> : <CircleHelp size={17} />}<span><strong>{selectedAnswer === question.answer ? "Exactly right." : "Not quite—try the key idea again."}</strong> {question.explanation}</span>
+              {selectedAnswer !== undefined && <div className={`quiz-feedback ${selectedAnswer === question.answer ? "right" : "wrong"}`} role="status" aria-live="polite">
+                {selectedAnswer === question.answer
+                  ? <><CheckCircle2 size={17} /><span><strong>Exactly right.</strong> {question.explanation}</span></>
+                  : <><CircleHelp size={17} /><span><strong>Not quite.</strong> Correct answer: <strong>{displayChoices.find((choice) => choice.originalIndex === question.answer)?.text}</strong>. {question.explanation}</span></>}
               </div>}
               <div className="quiz-controls">
                 <button type="button" className="quiz-control-button" disabled={questionIndex === 0} onClick={() => setQuestionIndex((current) => Math.max(0, current - 1))}><ArrowLeft size={14} /> Previous</button>
@@ -828,9 +840,9 @@ export default function PlantStudyPage() {
   const [filter, setFilter] = useState<TierFilter>("all");
   const [activePart, setActivePart] = useState<FlowerPartId>("stigma");
   const [completedPoints, setCompletedPoints] = useState<number[]>(() => readSavedCompletedPoints());
-  const [activePoint, setActivePoint] = useState<number>(() => getFirstIncompletePoint(readSavedCompletedPoints()));
+  const [activePoint, setActivePoint] = useState<number>(() => readSavedActivePoint());
   const [scrollToActivePoint, setScrollToActivePoint] = useState(false);
-  const courseComplete = completedPoints.length === COURSE_SESSIONS.length;
+  const courseComplete = COURSE_SESSIONS.every((session) => completedPoints.includes(session.number));
   const activeSession = COURSE_SESSIONS[activePoint - 1];
 
   useEffect(() => {
@@ -840,6 +852,14 @@ export default function PlantStudyPage() {
       // The course still works when browser storage is unavailable; progress then lasts only in memory.
     }
   }, [completedPoints]);
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(COURSE_ACTIVE_POINT_KEY, String(activePoint));
+    } catch {
+      // The selected point still works in memory if browser storage is unavailable.
+    }
+  }, [activePoint]);
 
   useEffect(() => {
     if (!scrollToActivePoint) return;
@@ -853,15 +873,16 @@ export default function PlantStudyPage() {
     setScrollToActivePoint(true);
   };
   const handleSelectPoint = (point: number) => {
-    if (point <= Math.min(COURSE_SESSIONS.length, completedPoints.length + 1)) navigateToPoint(point);
+    if (Number.isInteger(point) && point >= 1 && point <= COURSE_SESSIONS.length) navigateToPoint(point);
   };
   const handleCompletePoint = () => {
-    if (activePoint !== completedPoints.length + 1) return;
-    setCompletedPoints((current) => current.includes(activePoint) ? current : [...current, activePoint]);
+    setCompletedPoints((current) => current.includes(activePoint)
+      ? current
+      : [...current, activePoint].sort((left, right) => left - right));
   };
   const handlePreviousPoint = () => navigateToPoint(Math.max(1, activePoint - 1));
   const handleNextPoint = () => {
-    if (completedPoints.includes(activePoint) && activePoint < COURSE_SESSIONS.length) navigateToPoint(activePoint + 1);
+    if (activePoint < COURSE_SESSIONS.length) navigateToPoint(activePoint + 1);
   };
 
   return (
@@ -895,9 +916,9 @@ export default function PlantStudyPage() {
         ) : (
           <section className="page-wrap assessment-lock" role="status" aria-labelledby="assessment-lock-title">
             <div className="assessment-lock-copy">
-              <div className="eyebrow">Final review · locked</div>
-              <h2 id="assessment-lock-title">Complete all twelve points in order</h2>
-              <p>The 24-question self-assessment and Plenary unlock after syllabus point 12. Progress is saved for this browser session.</p>
+              <div className="eyebrow">Final review · course milestone</div>
+              <h2 id="assessment-lock-title">Complete all twelve points—in any order</h2>
+              <p>The 24-question self-assessment and Plenary appear after each point has been marked complete. You can open or revisit any point at any time. Progress is saved for this browser session.</p>
               <div className="assessment-lock-progress" role="progressbar" aria-label="Syllabus points completed" aria-valuemin={0} aria-valuemax={COURSE_SESSIONS.length} aria-valuenow={completedPoints.length}>
                 <span style={{ width: `${(completedPoints.length / COURSE_SESSIONS.length) * 100}%` }} />
               </div>

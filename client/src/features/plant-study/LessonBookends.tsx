@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, CheckCircle2, CircleHelp, Sparkles, Target } from "lucide-react";
+import { shuffleIndexedChoices } from "./questionUtils";
 
 type QuickQuestion = {
   prompt: string;
@@ -31,6 +32,7 @@ const starterQuestions: QuickQuestion[] = [
 
 export function Starter() {
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [choiceOrders] = useState(() => starterQuestions.map((question) => shuffleIndexedChoices(question.choices)));
   const answered = Object.keys(answers).length;
   const correct = starterQuestions.filter((question, index) => answers[index] === question.answer).length;
 
@@ -52,29 +54,29 @@ export function Starter() {
               <article className="starter-card" key={question.prompt}>
                 <div className="starter-card-top"><span>Warm-up {String(questionIndex + 1).padStart(2, "0")}</span><span>{selected === undefined ? "Choose one" : selected === question.answer ? "Correct" : "Review"}</span></div>
                 <h3>{question.prompt}</h3>
-                <div className="starter-choices" role="group" aria-label={`Answers for warm-up ${questionIndex + 1}`}>
-                  {question.choices.map((choice, choiceIndex) => {
+                <div className="starter-choices" role="group" aria-label={`Shuffled answers for warm-up ${questionIndex + 1}`}>
+                  {choiceOrders[questionIndex].map((choice, choiceIndex) => {
                     const answeredThis = selected !== undefined;
-                    const isCorrect = answeredThis && choiceIndex === question.answer;
-                    const isWrong = answeredThis && selected === choiceIndex && choiceIndex !== question.answer;
+                    const isCorrect = answeredThis && choice.originalIndex === question.answer;
+                    const isWrong = answeredThis && selected === choice.originalIndex && choice.originalIndex !== question.answer;
                     return (
                       <button
                         className={`starter-choice ${isCorrect ? "correct" : ""} ${isWrong ? "incorrect" : ""}`}
                         type="button"
-                        key={choice}
-                        aria-pressed={selected === choiceIndex}
-                        onClick={() => setAnswers((current) => ({ ...current, [questionIndex]: choiceIndex }))}
+                        key={choice.originalIndex}
+                        aria-pressed={selected === choice.originalIndex}
+                        onClick={() => setAnswers((current) => ({ ...current, [questionIndex]: choice.originalIndex }))}
                       >
-                        <span className="starter-answer-key">{isCorrect ? <Check size={15} /> : String.fromCharCode(65 + choiceIndex)}</span>
-                        <span>{choice}</span>
+                        <span className="starter-answer-key">{isCorrect ? <Check size={15} /> : isWrong ? "×" : String.fromCharCode(65 + choiceIndex)}</span>
+                        <span>{choice.text}</span>
                       </button>
                     );
                   })}
                 </div>
                 {selected !== undefined && (
-                  <p className={`starter-feedback ${selected === question.answer ? "right" : "wrong"}`} role="status">
+                  <p className={`starter-feedback ${selected === question.answer ? "right" : "wrong"}`} role="status" aria-live="polite">
                     {selected === question.answer ? <CheckCircle2 size={17} /> : <CircleHelp size={17} />}
-                    <span><strong>{selected === question.answer ? "Well recalled." : "Good one to revisit."}</strong> {question.explanation}</span>
+                    <span><strong>{selected === question.answer ? "Well recalled." : "Not quite."}</strong> {selected !== question.answer && <>Correct answer: <strong>{question.choices[question.answer]}</strong>. </>}{question.explanation}</span>
                   </p>
                 )}
               </article>
@@ -134,7 +136,7 @@ export function Plenary() {
     <section className="plenary-section" id="plenary" aria-labelledby="plenary-title">
       <div className="page-wrap">
         <div className="plenary-banner">
-          <div><span className="plenary-kicker"><Sparkles size={15} aria-hidden="true" /> Plenary · exit ticket</span><h2 id="plenary-title">Can you tell the whole story?</h2><p>Before you leave, answer these four short prompts aloud or in your own words—then reveal the key idea and check it off.</p></div>
+          <div><span className="plenary-kicker"><Sparkles size={15} aria-hidden="true" /> Plenary · exit ticket</span><h2 id="plenary-title">Can you tell the whole story?</h2><p>Answer these four short prompts in your own words. Reveal a sample answer if it helps; you can self-check without opening it.</p></div>
           <div className="plenary-progress" aria-live="polite"><strong>{checkedCount}/4</strong><span>exit prompts checked</span></div>
         </div>
         <div className="plenary-card">
@@ -146,7 +148,7 @@ export function Plenary() {
                 {revealed[index] ? <p className="plenary-answer"><CheckCircle2 size={18} />{item.answer}</p> : <p className="plenary-prompt-note">Pause and try to answer first.</p>}
                 <div className="plenary-question-actions">
                   <button type="button" className="plenary-reveal" onClick={() => setRevealed((current) => ({ ...current, [index]: true }))} disabled={Boolean(revealed[index])}>{revealed[index] ? "Answer revealed" : "Reveal answer"}</button>
-                  <button type="button" className="plenary-check" aria-pressed={Boolean(checked[index])} disabled={!revealed[index]} onClick={() => setChecked((current) => ({ ...current, [index]: !current[index] }))}>{checked[index] ? <><Check size={15} /> Checked</> : "I can explain it"}</button>
+                  <button type="button" className="plenary-check" aria-pressed={Boolean(checked[index])} onClick={() => setChecked((current) => ({ ...current, [index]: !current[index] }))}>{checked[index] ? <><Check size={15} /> Checked</> : "I can explain it"}</button>
                 </div>
               </article>
             ))}

@@ -991,3 +991,80 @@ button.session-step-link { font-family: inherit; cursor: pointer; }
   .study-session { scroll-margin-top: 118px; }
   .course-step-tier { font-size: .48rem; }
 }
+
+
+/* Independent point selection, visible horizontal navigation and instant grading */
+.course-progress-nav-shell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: min(1320px, calc(100% - 48px));
+  min-height: 50px;
+  margin: 0 auto;
+}
+.course-progress-nav-shell .course-progress-nav-inner {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: #9aaa95 #e7ece3;
+}
+.course-progress-nav-inner::-webkit-scrollbar { display: block; height: 5px; }
+.course-progress-nav-inner::-webkit-scrollbar-track { border-radius: 99px; background: #e7ece3; }
+.course-progress-nav-inner::-webkit-scrollbar-thumb { border-radius: 99px; background: #9aaa95; }
+.course-nav-scroll-control {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #dce4d8;
+  border-radius: 50%;
+  color: #456548;
+  background: #fffefb;
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.course-nav-scroll-control:hover { border-color: #a8b99f; background: #edf2e9; transform: translateY(-1px); }
+.course-nav-scroll-control:focus-visible { outline: 3px solid #84a77e; outline-offset: 2px; }
+.course-nav-note { padding: 6px 9px; border: 1px dashed #d5ded1; border-radius: 999px; color: #71806f; font-size: .67rem; font-weight: 750; white-space: nowrap; }
+
+.session-answer-choice.correct,
+.session-answer-choice.correct-answer { border-color: #87a77d; background: #edf5e9; color: #31543a; }
+.session-answer-choice.incorrect { border-color: #d49a81; background: #fcf0ea; color: #814a37; }
+.session-answer-choice.correct .session-choice-marker,
+.session-answer-choice.correct-answer .session-choice-marker { color: #fff; background: #52784e; }
+.session-answer-choice.incorrect .session-choice-marker { color: #fff; background: #a95d43; }
+.session-auto-feedback { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; padding: 10px 11px; border: 1px solid #d8e4d3; border-radius: 11px; background: #f5f8f2; color: #465b48; font-size: .75rem; line-height: 1.5; }
+.session-auto-feedback > svg { flex: 0 0 auto; margin-top: 1px; }
+.session-auto-feedback.correct { border-color: #c7ddc1; background: #f1f7ee; color: #3b6542; }
+.session-auto-feedback.incorrect { border-color: #ead2c6; background: #fcf4ef; color: #7b503d; }
+.session-auto-feedback > div { min-width: 0; }
+.session-auto-feedback p { margin: 3px 0 0; }
+.session-auto-feedback p strong { font-weight: 850; }
+.session-fill-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; }
+.session-fill-wrap { min-width: 0; }
+.session-fill-check { min-height: 43px; padding: 9px 13px; border: 1px solid #527a55; border-radius: 999px; color: #fff; background: #527a55; font: inherit; font-size: .75rem; font-weight: 800; cursor: pointer; transition: background .18s ease, opacity .18s ease; }
+.session-fill-check:hover:not(:disabled) { background: #3f6747; }
+.session-fill-check:disabled { opacity: .55; cursor: not-allowed; }
+.session-fill-check:focus-visible { outline: 3px solid #84a77e; outline-offset: 2px; }
+.session-match-item { display: grid; gap: 3px; }
+.session-match-feedback { margin: 0 0 4px; padding: 6px 8px; border-radius: 8px; font-size: .68rem; line-height: 1.4; }
+.session-match-feedback.correct { color: #3b6542; background: #f1f7ee; }
+.session-match-feedback.incorrect { color: #7b503d; background: #fcf0ea; }
+
+@media (max-width: 680px) {
+  .course-progress-nav-shell { width: calc(100% - 16px); gap: 4px; }
+  .course-nav-scroll-control { flex-basis: 27px; width: 27px; height: 27px; }
+  .course-nav-note { padding: 5px 7px; font-size: .6rem; }
+  .session-fill-form { grid-template-columns: minmax(0, 1fr); }
+  .session-fill-check { width: 100%; }
+}
